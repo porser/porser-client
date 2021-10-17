@@ -9,6 +9,9 @@ lerna-debug.log*
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
+# OS
+.DS_STORE
+
 # Runtime data
 pids
 *.pid
@@ -71,6 +74,7 @@ typings/
 # dotenv environment variables file
 .env
 .env.test
+.env.local
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
@@ -102,3 +106,6 @@ dist
 
 # TernJS port file
 .tern-port
+
+# IDE
+.vscode

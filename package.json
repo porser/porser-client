@@ -1,0 +1,67 @@
+{
+  "name": "porser-client",
+  "version": "1.0.0",
+  "repository": "git@github.com:porser/porser-client.git",
+  "license": "MIT",
+  "contributors": [
+    {
+      "name": "Mostafa Shamsitabar",
+      "email": "mostafa.sh.coderino@gmail.com",
+      "url": "https://mimsh.in"
+    }
+  ],
+  "browserslist": [
+    "last 3 Chrome major versions",
+    "last 3 ChromeAndroid major versions",
+    "last 3 Firefox major versions",
+    "last 3 Edge major versions",
+    "last 3 Safari major versions",
+    "last 3 iOS major versions"
+  ],
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "export": "next export",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "@types/clean-css": "^4.2.5",
+    "@types/node": "^16.11.1",
+    "@types/react": "^17.0.30",
+    "@types/react-dom": "^17.0.9",
+    "@types/smoothscroll-polyfill": "^0.3.1",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "eslint": "^8.0.1",
+    "eslint-config-next": "^11.1.2",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-react": "^7.26.1",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "husky": ">=6",
+    "lint-staged": ">=10",
+    "postcss-flexbugs-fixes": "^5.0.2",
+    "postcss-normalize": "^10.0.1",
+    "postcss-preset-env": "^6.7.0",
+    "prettier": "^2.4.1",
+    "typescript": "^4.4.4"
+  },
+  "dependencies": {
+    "@sonnat/icons": "^1.2.0",
+    "@sonnat/ui": "^1.3.2",
+    "autoprefixer": "^10.3.7",
+    "classnames": "^2.3.1",
+    "clean-css": "^5.2.1",
+    "next": "^11.1.2",
+    "postcss": "^8.3.9",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "smoothscroll-polyfill": "^0.4.4",
+    "zustand": "^3.5.13"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json}": "eslint --cache --fix",
+    "*.{js,jsx,ts,tsx,json,css}": "prettier --write"
+  }
+}
