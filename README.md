@@ -1,7 +1,5 @@
 <div align="center">
-  <a href="https://www.sonnat.dev">
-    <h1><img alt="Porsel Client" src="https://raw.githubusercontent.com/porser/porser-client/9e1a42a3e60cb156392fbeee6a35ebc8af28db30/porser-logo-type.svg" width="256"></h1>
-  </a>
+  <h1><img alt="Porsel Client" src="https://raw.githubusercontent.com/porser/porser-client/main/public/meta-facebook-image.png" width="100%"></h1>
 </div>
 
 <div align="center">
