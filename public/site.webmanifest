@@ -1,0 +1,21 @@
+{
+  "name": "Porser",
+  "short_name": "Porser",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/",
+  "orientation": "portrait",
+  "theme_color": "#27184f",
+  "background_color": "#27184f",
+  "display": "standalone"
+}
