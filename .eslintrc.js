@@ -50,6 +50,11 @@ module.exports = {
     }
   ],
   settings: {
-    react: { version: "detect" }
+    react: { version: "detect" },
+    "import/resolver": {
+      node: {
+        paths: ["."]
+      }
+    }
   }
 };
