@@ -43,7 +43,7 @@ When in doubt, keep your Pull Requests small. To give a Pull Request the best ch
 
 ```sh
 git clone https://github.com/<your username>/porser-client.git
-cd utilityjs
+cd porser-client
 git remote add upstream https://github.com/porser/porser-client.git
 ```
 
@@ -78,7 +78,7 @@ We are monitoring for Pull Requests. We will review your Pull Request and either
 
 ### Coding style
 
-Please follow the coding style of the project. UtilityJS uses `prettier` and `eslint`, so if possible, enable linting in your editor to get real-time feedback.
+Please follow the coding style of the project. PorserClient uses `prettier` and `eslint`, so if possible, enable linting in your editor to get real-time feedback.
 
 ### Git Commit Messages
 
