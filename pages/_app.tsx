@@ -6,6 +6,7 @@ import Head from "next/head";
 import * as React from "react";
 import smoothScroll from "smoothscroll-polyfill";
 import { usePageState } from "store";
+import theme from "theme";
 import type { AppPropsWithLayout } from "types";
 import { setTitleMeta } from "utils";
 
@@ -62,10 +63,10 @@ const App = (props: AppPropsWithLayout): React.ReactNode => {
   React.useEffect(() => void smoothScroll.polyfill(), []);
 
   return (
-    <SonnatInitializer injectFirst>
+    <SonnatInitializer theme={theme} injectFirst>
       <Head>
         {setTitleMeta(
-          "Porser | Porser is a Persian open-source web application that specializes in building online form, surveys, quizzes and polls."
+          "Porser | Porser is a Persian web application that specializes in building online form, surveys, quizzes and polls."
         )}
         <meta
           name="viewport"
