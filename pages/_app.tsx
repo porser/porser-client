@@ -1,6 +1,5 @@
 import { CssBaseline, PageLoader } from "@sonnat/ui";
 import { makeStyles, SonnatInitializer } from "@sonnat/ui/styles";
-import useIsomorphicLayoutEffect from "@utilityjs/use-isomorphic-layout-effect";
 import { PageSuspension } from "components/partial";
 import Head from "next/head";
 import * as React from "react";
@@ -105,9 +104,9 @@ const App = (props: AppPropsWithLayout): React.ReactNode => {
   const isPageSuspended =
     shouldProtect && (authenticating || !!authenticationError);
 
-  useIsomorphicLayoutEffect(() => {
+  React.useEffect(() => {
     if (authenticationError) void router.replace("/login");
-  }, [authenticationError]);
+  }, [authenticationError, router]);
 
   return (
     <SonnatInitializer theme={theme} injectFirst>
