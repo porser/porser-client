@@ -1,6 +1,5 @@
 import c from "classnames";
 import * as React from "react";
-import useStyles from "./styles";
 
 interface AuthLayoutBaseProps {
   className?: string;
@@ -19,13 +18,9 @@ const AuthLayoutBase = (
 ) => {
   const { children, className, ...otherProps } = props;
 
-  const classes = useStyles();
-
   return (
-    <div ref={ref} {...otherProps} className={c(className, classes.root)}>
-      <main id="main" className={classes.main}>
-        {children}
-      </main>
+    <div ref={ref} {...otherProps} className={c(className)}>
+      <main id="main">{children}</main>
     </div>
   );
 };
