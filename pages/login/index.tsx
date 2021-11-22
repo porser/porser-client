@@ -1,33 +1,65 @@
 import makeStyles from "@sonnat/ui/styles/makeStyles";
 import LoginForm from "components/form/LoginForm";
 import AuthLayout from "components/layout/AuthLayout";
+import type { GetServerSideProps } from "next";
+import Head from "next/head";
 import * as React from "react";
 import type { Layout, NextPageWithLayout } from "types";
+import {
+  renderErrorPage,
+  setTitleMeta,
+  withServerSideAuthConfirmation
+} from "utils";
+import type { ErrorType } from "utils/useConfirmAuthentication";
 
 const useStyles = makeStyles(
   theme => {
     const {
-      colors,
       typography: { pxToRem }
     } = theme;
 
-    return { root: {}, form: {} };
+    return {
+      root: {
+        height: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center"
+      },
+      form: { maxWidth: pxToRem(512) }
+    };
   },
-  { name: "LoginPage" }
+  { name: "Page" }
 );
 
-const LoginPage: NextPageWithLayout = () => {
+interface Props {
+  preRenderErrors?: {
+    globalError: ErrorType;
+    connectionError: ErrorType;
+  };
+}
+
+const Page: NextPageWithLayout<Props> = props => {
+  const { preRenderErrors } = props;
+
   const classes = useStyles();
 
+  if (preRenderErrors) return renderErrorPage(preRenderErrors);
+
   return (
-    <section className={classes.root}>
-      <LoginForm className={classes.form} />
-    </section>
+    <React.Fragment>
+      <Head>{setTitleMeta("PORSER | ورود")}</Head>
+      <section className={classes.root}>
+        <LoginForm className={classes.form} />
+      </section>
+    </React.Fragment>
   );
 };
 
 const PageLayout: Layout = page => <AuthLayout>{page}</AuthLayout>;
 
-LoginPage.getLayout = () => PageLayout;
+export const getServerSideProps: GetServerSideProps = async context =>
+  withServerSideAuthConfirmation(context);
 
-export default LoginPage;
+Page.getLayout = () => PageLayout;
+
+export default Page;
