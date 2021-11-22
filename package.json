@@ -53,16 +53,23 @@
     "typescript": "^4.4.4"
   },
   "dependencies": {
+    "@feathersjs/authentication-client": "^4.5.11",
+    "@feathersjs/errors": "^4.5.11",
+    "@feathersjs/feathers": "^4.5.11",
+    "@feathersjs/socketio-client": "^4.5.11",
     "@sonnat/icons": "^1.2.0",
     "@sonnat/ui": "^1.4.0",
     "autoprefixer": "^10.3.7",
     "classnames": "^2.3.1",
     "clean-css": "^5.2.1",
+    "cookie-storage": "^6.1.0",
+    "jwt-decode": "^3.1.2",
     "next": "^11.1.2",
     "postcss": "^8.3.9",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "smoothscroll-polyfill": "^0.4.4",
+    "socket.io-client": "^2.4.0",
     "zustand": "^3.5.13"
   },
   "lint-staged": {
