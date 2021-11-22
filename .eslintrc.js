@@ -34,6 +34,7 @@ module.exports = {
     "no-console": "warn",
     "prefer-const": "error",
     "default-case": "warn",
+    "react/prop-types": "off",
     "react/react-in-jsx-scope": "off"
   },
   overrides: [
