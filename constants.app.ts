@@ -1,5 +1,15 @@
+import env from "utils/env";
+
+export const isProduction = env("NODE_ENV", "development") === "production";
+
 export const ACCESS_TOKEN_COOKIE_KEY = "porser-access-token";
 export const REFRESH_TOKEN_COOKIE_KEY = "porser-refresh-token";
+
+const _DEV_API_URL_ = "http://localhost:3030";
+
+export const API_URL = isProduction
+  ? env("NEXT_PUBLIC_API_URL", _DEV_API_URL_)
+  : _DEV_API_URL_;
 
 export const SERVER_ERROR = [
   "مشکلی در سرور بوجود آمده است.",

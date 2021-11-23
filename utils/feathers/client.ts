@@ -1,7 +1,7 @@
 import authenticationService from "@feathersjs/authentication-client";
 import feathers from "@feathersjs/feathers";
 import socketIoService from "@feathersjs/socketio-client";
-import { ACCESS_TOKEN_COOKIE_KEY } from "constants.app";
+import { ACCESS_TOKEN_COOKIE_KEY, API_URL } from "constants.app";
 import { CookieStorage } from "cookie-storage";
 import socketIoClient from "socket.io-client";
 import type { IUserRaw, Service } from "types";
@@ -14,7 +14,7 @@ interface ServiceTypes {
   "verify-account": Service<unknown>;
 }
 
-const socket = socketIoClient("http://localhost:3030");
+const socket = socketIoClient(API_URL);
 const client = feathers<ServiceTypes>();
 
 client.configure(socketIoService(socket));
