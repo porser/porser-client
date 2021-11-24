@@ -20,5 +20,6 @@ export { default as setTitleMeta } from "./setTitleMeta";
 export { default as storeAccessToken } from "./storeAccessToken";
 export { default as storeRefreshToken } from "./storeRefreshToken";
 export { default as useConfirmAuthentication } from "./useConfirmAuthentication";
+export { default as validateByBrowser } from "./validateByBrowser";
 export { default as validateEmailByBrowser } from "./validateEmailByBrowser";
 export { default as withServerSideAuthConfirmation } from "./withServerSideAuthConfirmation";
