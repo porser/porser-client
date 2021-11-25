@@ -1,4 +1,5 @@
 import makeStyles from "@sonnat/ui/styles/makeStyles";
+import Choice from "components/core/Choice";
 import SingleLineText from "components/core/SingleLineText/SingleLineText";
 import type { GetServerSideProps } from "next";
 import Head from "next/head";
@@ -19,9 +20,7 @@ const Page: NextPageWithLayout = () => {
   return (
     <React.Fragment>
       <Head>{setTitleMeta("PORSER | فرم رو پر کنید")}</Head>
-      <section className={classes.root}>
-        <SingleLineText />
-      </section>
+      <section className={classes.root}></section>
     </React.Fragment>
   );
 };
