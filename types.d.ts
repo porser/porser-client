@@ -87,3 +87,128 @@ export type ObjectLiteralKeys = string | number | symbol;
 export type ObjectLiteral = Record<ObjectLiteralKeys, unknown>;
 export type AnyObject = ObjectLiteral;
 export type EmptyObject = Record<ObjectLiteralKeys, never>;
+
+export type LogicalOperationsKeys =
+  | "equals"
+  | "not_equals"
+  | "starts_with"
+  | "ends_with"
+  | "includes"
+  | "not_includes"
+  | "greater_than"
+  | "less_than"
+  | "equal_or_less_than"
+  | "equal_or_geater_than";
+
+export type TextLogicalOperations = Array<
+  Extract<
+    LogicalOperationsKeys,
+    | "equals"
+    | "not_equals"
+    | "starts_with"
+    | "ends_with"
+    | "includes"
+    | "not_includes"
+  >
+>;
+
+export type NumberLogicalOperations = Array<
+  Extract<
+    LogicalOperationsKeys,
+    | "equals"
+    | "not_equals"
+    | "greater_than"
+    | "less_than"
+    | "equal_or_less_than"
+    | "equal_or_geater_than"
+  >
+>;
+
+export type SelectLogicalOperations = Array<
+  Extract<LogicalOperationsKeys, "equals" | "not_equals">
+>;
+
+export interface GeneralProps<
+  LogicalOperations extends Array<LogicalOperationsKeys>,
+  T = unknown
+> {
+  defaultValue: T;
+  required?: boolean;
+  readOnly?: boolean;
+  disabled?: boolean;
+  allowedOperations: LogicalOperations;
+}
+
+export interface ConditionDoFnParam<T = unknown, Required = boolean> {
+  value: T;
+  optional: Required;
+}
+
+export interface ConditionsFns {
+  goto: {
+    action: "goto";
+    params: ConditionDoFnParam<string, true>;
+  };
+}
+
+export interface Condition<
+  Field extends FieldProps,
+  FieldName extends keyof FieldTypes
+> {
+  id: string;
+  check: {
+    field: FieldName;
+    operator: Field["allowedOperations"];
+    against: Field["defaultValue"];
+  };
+}
+
+export interface ConditionFieldProps<
+  Field extends FieldProps = FieldProps,
+  FieldName extends keyof FieldTypes = keyof FieldTypes,
+  Fn extends keyof ConditionsFns = keyof ConditionsFns
+> {
+  conditions: Condition<Field, FieldName>[];
+  otherwise: { do: ConditionsFns[Fn] };
+  do: ConditionsFns[Fn];
+}
+
+export type SingleLineTextFieldProps = GeneralProps<
+  TextLogicalOperations,
+  string
+>;
+
+export type MultiLineTextFieldProps = GeneralProps<
+  TextLogicalOperations,
+  string
+>;
+
+export type EmailFieldProps = GeneralProps<TextLogicalOperations, string>;
+export type URLFieldProps = GeneralProps<TextLogicalOperations, string>;
+export type NumberFieldProps = GeneralProps<TextLogicalOperations, "number">;
+export type SelectFieldProps = GeneralProps<TextLogicalOperations, string>;
+
+export type FieldTypes = {
+  SINGLE_LINE_TEXT: "SINGLE_LINE_TEXT";
+  MULTI_LINE_TEXT: "MULTI_LINE_TEXT";
+  EMAIL: "EMAIL";
+  URL: "URL";
+  NUMBER: "NUMBER";
+  CONDITION: "CONDITION";
+  SELECT: "SELECT";
+};
+
+export type FieldProps =
+  | SingleLineTextFieldProps
+  | MultiLineTextFieldProps
+  | EmailFieldProps
+  | URLFieldProps
+  | NumberFieldProps
+  | SelectFieldProps;
+
+export interface FieldParams {
+  title: string;
+  description?: string;
+  type: keyof FieldTypes;
+  // props: Omit<Props, "allowedOperations" | "index">;
+}
