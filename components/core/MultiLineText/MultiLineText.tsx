@@ -12,6 +12,13 @@ interface MultiLineTextBaseProps {
   className?: string;
   defaultValue?: string;
   required?: boolean;
+  pattern?: string;
+  minLength?: number;
+  maxLength?: number;
+  title: string;
+  description?: string;
+  id: string;
+  index: number;
 }
 
 type MultiLineTextProps = Omit<
@@ -48,7 +55,7 @@ const MultiLineTextBase = (
   props: MultiLineTextProps,
   ref: React.Ref<HTMLDivElement>
 ) => {
-  const { defaultValue, ...otherProps } = props;
+  const { id, index, title, description, defaultValue, ...otherProps } = props;
 
   const [state, dispatch] = React.useReducer(reducer, {
     value: defaultValue || "",
@@ -71,11 +78,33 @@ const MultiLineTextBase = (
     }
   };
 
+  const ids = {
+    input: `textarea-${id}-${index}`,
+    descriptor: `descriptor-${id}-${index}`
+  };
+
   return (
-    <FormControl hasError={!!state.error} required={props.required} ref={ref}>
-      <FormControlLabel>Label</FormControlLabel>
-      <FormControlDescription>Description</FormControlDescription>
-      <TextArea onChange={handleChange} value={state.value} autoResize />
+    <FormControl
+      fluid
+      hasError={!!state.error}
+      required={props.required}
+      ref={ref}
+      data-id={id}
+      data-index={index}
+    >
+      <FormControlLabel htmlFor={ids.input}>{title}</FormControlLabel>
+      {description && (
+        <FormControlDescription id={ids.descriptor}>
+          {description}
+        </FormControlDescription>
+      )}
+      <TextArea
+        onChange={handleChange}
+        value={state.value}
+        inputProps={{ id: ids.input, "aria-describedby": ids.descriptor }}
+        autoResize
+        minRows={3}
+      />
       {!!state.error && (
         <FormControlFeedback>{state.error}</FormControlFeedback>
       )}
