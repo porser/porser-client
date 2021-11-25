@@ -185,8 +185,21 @@ export type MultiLineTextFieldProps = GeneralProps<
 
 export type EmailFieldProps = GeneralProps<TextLogicalOperations, string>;
 export type URLFieldProps = GeneralProps<TextLogicalOperations, string>;
-export type NumberFieldProps = GeneralProps<TextLogicalOperations, "number">;
-export type ChoiceFieldProps = GeneralProps<TextLogicalOperations, string>;
+export type NumberFieldProps = GeneralProps<TextLogicalOperations, number>;
+export type ChoiceFieldProps = GeneralProps<TextLogicalOperations, string> & {
+  max?: number;
+  multiple?: boolean;
+  allowOther?: boolean;
+  otherDescription?: string;
+  otherLabel?: string;
+  options: Array<{
+    id: string;
+    label: string;
+    value: string;
+    description?: string;
+    index: number;
+  }>;
+};
 
 export type FieldTypes = {
   SINGLE_LINE_TEXT: "SINGLE_LINE_TEXT";
