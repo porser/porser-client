@@ -60,6 +60,9 @@ const validateByBrowser = (
   if (!isUndefined(maxLength) && String(value).length > maxLength)
     return messages.tooLong;
 
+  if (input.type === "number" && input.value === "" && !!value)
+    return messages.typeMismatch;
+
   const currentErrorKey = Object.keys(messages).find(
     key => input.validity[<keyof ValidityState>key]
   );
