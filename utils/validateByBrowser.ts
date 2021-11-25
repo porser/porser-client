@@ -37,9 +37,9 @@ const validateByBrowser = (
   if (!isUndefined(max)) input.max = String(max);
   if (!isUndefined(min)) input.min = String(min);
   if (!isUndefined(required)) input.required = required;
-
   const messages = {
     patternMismatch: "عبارت وارد‌شده نامعتبر است",
+    typeMismatch: "عبارت وارد‌شده نامعتبر است",
     rangeOverflow: `حداکثر ${Number(max).toLocaleString("fa-ir", {
       useGrouping: false
     })}`,
@@ -59,6 +59,9 @@ const validateByBrowser = (
     return messages.tooShort;
   if (!isUndefined(maxLength) && String(value).length > maxLength)
     return messages.tooLong;
+
+  if (input.type === "number" && input.value === "" && !!value)
+    return messages.typeMismatch;
 
   const currentErrorKey = Object.keys(messages).find(
     key => input.validity[<keyof ValidityState>key]
