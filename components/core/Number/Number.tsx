@@ -14,6 +14,10 @@ interface NumberBaseProps {
   required?: boolean;
   min?: number;
   max?: number;
+  title: string;
+  description?: string;
+  id: string;
+  index: number;
 }
 
 type NumberProps = Omit<
@@ -47,7 +51,8 @@ const reducer: Reducer = (prevState, action) => {
 };
 
 const NumberBase = (props: NumberProps, ref: React.Ref<HTMLDivElement>) => {
-  const { defaultValue, required, min, max } = props;
+  const { id, index, defaultValue, title, description, required, min, max } =
+    props;
 
   const [state, dispatch] = React.useReducer(reducer, {
     value: defaultValue || "",
@@ -75,11 +80,23 @@ const NumberBase = (props: NumberProps, ref: React.Ref<HTMLDivElement>) => {
     }
   };
 
+  const ids = {
+    input: `textfield-${id}-${index}`,
+    descriptor: `descriptor-${id}-${index}`
+  };
+
   return (
     <FormControl hasError={!!state.error} required={props.required} ref={ref}>
-      <FormControlLabel>Label</FormControlLabel>
-      <FormControlDescription>Description</FormControlDescription>
-      <TextField onChange={handleChange} value={state.value} type="text" />
+      <FormControlLabel htmlFor={ids.input}>{title}</FormControlLabel>
+      <FormControlDescription id={ids.descriptor}>
+        {description}
+      </FormControlDescription>
+      <TextField
+        onChange={handleChange}
+        value={state.value}
+        type="text"
+        inputProps={{ id: ids.input, "aria-describedby": ids.descriptor }}
+      />
       {!!state.error && (
         <FormControlFeedback>{state.error}</FormControlFeedback>
       )}
