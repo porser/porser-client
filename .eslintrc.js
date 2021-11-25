@@ -35,7 +35,8 @@ module.exports = {
     "prefer-const": "error",
     "default-case": "warn",
     "react/prop-types": "off",
-    "react/react-in-jsx-scope": "off"
+    "react/react-in-jsx-scope": "off",
+    "@next/next/no-img-element": "off"
   },
   overrides: [
     {
