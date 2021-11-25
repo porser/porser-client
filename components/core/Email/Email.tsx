@@ -12,6 +12,10 @@ interface EmailBaseProps {
   className?: string;
   defaultValue?: string;
   required?: boolean;
+  title: string;
+  description?: string;
+  id: string;
+  index: number;
 }
 
 type EmailProps = Omit<
@@ -45,7 +49,7 @@ const reducer: Reducer = (prevState, action) => {
 };
 
 const EmailBase = (props: EmailProps, ref: React.Ref<HTMLDivElement>) => {
-  const { defaultValue, required } = props;
+  const { id, index, defaultValue, title, description, required } = props;
 
   const [state, dispatch] = React.useReducer(reducer, {
     value: defaultValue || "",
@@ -68,11 +72,30 @@ const EmailBase = (props: EmailProps, ref: React.Ref<HTMLDivElement>) => {
     }
   };
 
+  const ids = {
+    input: `field-${id}-${index}`,
+    descriptor: `descriptor-${id}-${index}`
+  };
+
   return (
-    <FormControl hasError={!!state.error} required={props.required} ref={ref}>
-      <FormControlLabel>Label</FormControlLabel>
-      <FormControlDescription>Description</FormControlDescription>
-      <TextField onChange={handleChange} value={state.value} type="email" />
+    <FormControl
+      fluid
+      hasError={!!state.error}
+      required={props.required}
+      ref={ref}
+      data-id={id}
+      data-index={index}
+    >
+      <FormControlLabel htmlFor={ids.input}>{title}</FormControlLabel>
+      <FormControlDescription id={ids.descriptor}>
+        {description}
+      </FormControlDescription>
+      <TextField
+        inputProps={{ id: ids.input, "aria-describedby": ids.descriptor }}
+        onChange={handleChange}
+        value={state.value}
+        type="email"
+      />
       {!!state.error && (
         <FormControlFeedback>{state.error}</FormControlFeedback>
       )}
