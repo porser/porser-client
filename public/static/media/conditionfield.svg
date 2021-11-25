@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="401px" height="401px" viewBox="0 0 401 401" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Group 9</title>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="bg-1-copy" transform="translate(-1408.000000, -2296.000000)">
+            <g id="Form-Models-Deactive-(1)" transform="translate(112.000000, 1865.000000)">
+                <g id="Group-9" transform="translate(1296.500000, 431.500000)">
+                    <path d="M30,398.58 C14.2225561,398.563465 1.43653533,385.777444 1.42,370 L1.42,30 C1.43653533,14.2225561 14.2225561,1.43653533 30,1.42 L370,1.42 C385.777444,1.43653533 398.563465,14.2225561 398.58,30 L398.58,370 C398.563465,385.777444 385.777444,398.563465 370,398.58 L30,398.58 Z" id="Path" fill="#CCCCCC" fill-rule="nonzero"></path>
+                    <path d="M370,2.83 C384.998723,2.84653361 397.153466,15.0012771 397.17,30 L397.17,370 C397.153466,384.998723 384.998723,397.153466 370,397.17 L30,397.17 C15.0012771,397.153466 2.84653361,384.998723 2.83,370 L2.83,30 C2.84653361,15.0012771 15.0012771,2.84653361 30,2.83 L370,2.83 M370,0 L30,0 C13.4314575,0 0,13.4314575 0,30 L0,370 C0,386.568542 13.4314575,400 30,400 L370,400 C386.568542,400 400,386.568542 400,370 L400,30 C400,13.4314575 386.568542,0 370,0 Z" id="Shape" fill="#B3B3B3" fill-rule="nonzero"></path>
+                    <rect id="Rectangle" stroke="#B3B3B3" stroke-width="2.83" fill="#FFFFFF" fill-rule="nonzero" x="110" y="50" width="180" height="100" rx="5"></rect>
+                    <rect id="Rectangle" stroke="#B3B3B3" stroke-width="2.83" fill="#FFFFFF" fill-rule="nonzero" transform="translate(199.992383, 250.500492) rotate(-45.000000) translate(-199.992383, -250.500492) " x="164.637383" y="215.145492" width="70.71" height="70.71"></rect>
+                    <line x1="200" y1="150" x2="200" y2="180.16" id="Path" stroke="#B3B3B3" stroke-width="2.83"></line>
+                    <polygon id="Path" fill="#B3B3B3" fill-rule="nonzero" points="185.87 176.02 200 200.5 214.13 176.02"></polygon>
+                    <line x1="150" y1="250.5" x2="50" y2="250.5" id="Path" stroke="#B3B3B3" stroke-width="2.83"></line>
+                    <line x1="250" y1="250.5" x2="350" y2="250.5" id="Path" stroke="#B3B3B3" stroke-width="2.83"></line>
+                    <line x1="50" y1="250.5" x2="50" y2="330.66" id="Path" stroke="#B3B3B3" stroke-width="2.83"></line>
+                    <polygon id="Path" fill="#B3B3B3" fill-rule="nonzero" points="35.87 326.52 50 351 64.13 326.52"></polygon>
+                    <line x1="350" y1="250.5" x2="350" y2="330.66" id="Path" stroke="#B3B3B3" stroke-width="2.83"></line>
+                    <polygon id="Path" fill="#B3B3B3" fill-rule="nonzero" points="335.87 326.52 350 351 364.13 326.52"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
