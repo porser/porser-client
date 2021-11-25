@@ -3,9 +3,6 @@ import {
   FormControlDescription,
   FormControlFeedback,
   FormControlLabel,
-  SelectOption,
-  TextField,
-  Select,
   CheckGroup,
   Checkbox,
   RadioGroup,
@@ -23,6 +20,7 @@ type Option = {
   label: string;
   description?: string;
 };
+
 interface ChoiceBaseProps {
   className?: string;
   defaultValue?: string | string[];
@@ -30,6 +28,10 @@ interface ChoiceBaseProps {
   multiple?: boolean;
   randomized?: boolean;
   options: Option[];
+  title: string;
+  description?: string;
+  id: string;
+  index: number;
 }
 
 type ChoiceProps = Omit<
@@ -63,7 +65,16 @@ const reducer: Reducer = (prevState, action) => {
 };
 
 const ChoiceBase = (props: ChoiceProps, ref: React.Ref<HTMLDivElement>) => {
-  const { defaultValue, options, multiple = false, required } = props;
+  const {
+    id,
+    index,
+    title,
+    description,
+    defaultValue,
+    options,
+    multiple = false,
+    required
+  } = props;
 
   const [state, dispatch] = React.useReducer(reducer, {
     value: defaultValue || (multiple ? [""] : ""),
@@ -88,9 +99,18 @@ const ChoiceBase = (props: ChoiceProps, ref: React.Ref<HTMLDivElement>) => {
   };
 
   return (
-    <FormControl hasError={!!state.error} required={props.required} ref={ref}>
-      <FormControlLabel>Label</FormControlLabel>
-      <FormControlDescription>Description</FormControlDescription>
+    <FormControl
+      fluid
+      hasError={!!state.error}
+      required={props.required}
+      ref={ref}
+      data-id={id}
+      data-index={index}
+    >
+      <FormControlLabel>{title}</FormControlLabel>
+      {description && (
+        <FormControlDescription>{description}</FormControlDescription>
+      )}
       {multiple ? (
         <CheckGroup
           value={state.value as string[]}
@@ -117,7 +137,7 @@ const ChoiceBase = (props: ChoiceProps, ref: React.Ref<HTMLDivElement>) => {
           onChange={(_, selectedValue) => void handleChange(selectedValue)}
         >
           {options.map(option => (
-            <Flex key={option.value}>
+            <Flex direction="column" key={option.value}>
               <Radio label={option.label} value={option.value} />
               {!!option.description && (
                 <Text variant="caption" color="textSecondary">
