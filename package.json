@@ -32,6 +32,7 @@
   },
   "devDependencies": {
     "@types/clean-css": "^4.2.5",
+    "@types/deepmerge": "^2.2.0",
     "@types/node": "^16.11.1",
     "@types/react": "^17.0.30",
     "@types/react-dom": "^17.0.9",
@@ -63,6 +64,7 @@
     "classnames": "^2.3.1",
     "clean-css": "^5.2.1",
     "cookie-storage": "^6.1.0",
+    "deepmerge": "^4.2.2",
     "jwt-decode": "^3.1.2",
     "next": "^11.1.2",
     "postcss": "^8.3.9",
