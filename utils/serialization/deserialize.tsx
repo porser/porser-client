@@ -1,11 +1,14 @@
-import type { Serialize } from "./Form";
 import {
   Choice,
-  MultiLineText,
   Form,
+  MultiLineText,
   SingleLineText,
+  URL,
   View
 } from "components/core";
+import Number from "components/core/Number";
+import type { ChoiceFieldProps } from "types";
+import type { Serialize } from "./Form";
 
 const deserialize = (data: Serialize) => {
   const views = data.views.map((view, vIndex) => {
@@ -18,6 +21,29 @@ const deserialize = (data: Serialize) => {
               id={field.id}
               title={field.title}
               description={field.description}
+              index={fIndex}
+              {...field.props}
+            />
+          );
+        case "URL":
+          return (
+            <URL
+              key={`${vIndex}/${field.id}/${fIndex}`}
+              id={field.id}
+              title={field.title}
+              description={field.description}
+              index={fIndex}
+              {...field.props}
+            />
+          );
+        case "NUMBER":
+          return (
+            <Number
+              key={`${vIndex}/${field.id}/${fIndex}`}
+              id={field.id}
+              title={field.title}
+              description={field.description}
+              index={fIndex}
               {...field.props}
             />
           );
@@ -28,6 +54,7 @@ const deserialize = (data: Serialize) => {
               id={field.id}
               title={field.title}
               description={field.description}
+              index={fIndex}
               {...field.props}
             />
           );
@@ -38,16 +65,8 @@ const deserialize = (data: Serialize) => {
               id={field.id}
               title={field.title}
               description={field.description}
-              options={Array(5)
-                .fill(null)
-                .map((_, index) => ({
-                  index,
-                  id: `${index}`,
-                  label: `${index}`,
-                  value: `${index}`,
-                  description: "یه متن که مثلاً توضیح می‌ده!"
-                }))}
-              {...field.props}
+              index={fIndex}
+              {...(field.props as ChoiceFieldProps)}
             />
           );
         }
@@ -55,13 +74,14 @@ const deserialize = (data: Serialize) => {
           return null;
       }
     });
-
     return (
       <View
         key={`${view.id}/${vIndex}`}
         id={view.id}
         index={vIndex}
         fields={fields}
+        title={view.title}
+        description={view.description}
       />
     );
   });

@@ -1,3 +1,4 @@
+import { nanoid } from "nanoid";
 import type { FieldParams } from "types";
 import Field from "./Field";
 import View from "./View";
@@ -5,6 +6,8 @@ import View from "./View";
 export interface Serialize {
   views: {
     id: View["id"];
+    title: View["title"];
+    description: View["description"];
     fields: Array<FieldParams & { id: string; index: number; props: unknown }>;
   }[];
 }
@@ -16,7 +19,7 @@ export default class Form {
   private serialized: Serialize = { views: [] };
 
   constructor() {
-    this.id = "";
+    this.id = nanoid();
   }
 
   private _serializeField(field: Field) {
@@ -83,7 +86,12 @@ export default class Form {
     view.setIndex(this.views.length);
 
     this.views.push(view);
-    this.serialized.views.push({ id: view.getId(), fields: [] });
+    this.serialized.views.push({
+      id: view.getId(),
+      fields: [],
+      title: view.getTitle(),
+      description: view.getDescription()
+    });
 
     this._serializeView(view);
   }
@@ -101,7 +109,6 @@ export default class Form {
     const view = field.getView();
 
     view.addField(field);
-
     this._serializeView(view);
   }
 

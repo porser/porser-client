@@ -1,18 +1,27 @@
+import deepMerge from "deepmerge";
+import { nanoid } from "nanoid";
 import Field from "./Field";
 import Form from "./Form";
-import deepMerge from "deepmerge";
 
 export default class View {
   private id: string;
   private index = -1;
 
+  private title?: string;
+  private description?: string;
+
   private form: Form;
 
   private fields: Field[] = [];
 
-  constructor(form: Form) {
-    this.id = "";
+  constructor(form: Form, params?: { title?: string; description?: string }) {
+    const { title, description } = params || {};
+
+    this.id = nanoid();
     this.form = form;
+
+    this.title = title;
+    this.description = description;
   }
 
   public setIndex(index: number) {
@@ -21,6 +30,14 @@ export default class View {
 
   public getIndex() {
     return this.index;
+  }
+
+  public getTitle() {
+    return this.title;
+  }
+
+  public getDescription() {
+    return this.description;
   }
 
   public getId() {

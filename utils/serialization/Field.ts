@@ -1,11 +1,12 @@
+import { nanoid } from "nanoid";
 import type {
+  ChoiceFieldProps,
   ConditionFieldProps,
   EmailFieldProps,
   FieldParams,
   FieldTypes,
   MultiLineTextFieldProps,
   NumberFieldProps,
-  ChoiceFieldProps,
   SingleLineTextFieldProps,
   URLFieldProps
 } from "types";
@@ -36,7 +37,7 @@ export default abstract class Field {
   constructor(view: View, params: FieldParams) {
     const { title, type, description } = params;
 
-    this.id = "";
+    this.id = nanoid();
     this.index = -1;
 
     this.title = title;
