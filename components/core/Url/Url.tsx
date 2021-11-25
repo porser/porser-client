@@ -87,11 +87,17 @@ const EmailBase = (props: EmailProps, ref: React.Ref<HTMLDivElement>) => {
       data-index={index}
     >
       <FormControlLabel htmlFor={ids.input}>{title}</FormControlLabel>
-      <FormControlDescription id={ids.descriptor}>
-        {description}
-      </FormControlDescription>
+      {!!description && (
+        <FormControlDescription id={ids.descriptor}>
+          {description}
+        </FormControlDescription>
+      )}
       <TextField
-        inputProps={{ id: ids.input, "aria-describedby": ids.descriptor }}
+        inputProps={{
+          id: ids.input,
+          "aria-describedby": ids.descriptor,
+          dir: "ltr"
+        }}
         onChange={handleChange}
         value={state.value}
       />

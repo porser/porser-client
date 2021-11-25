@@ -3,3 +3,4 @@ export { default as Form } from "./Form";
 export { default as MultiLineText } from "./MultiLineText";
 export { default as SingleLineText } from "./SingleLineText";
 export { default as View } from "./View";
+export { default as URL } from "./Url";

@@ -3,6 +3,7 @@ import {
   FormControlDescription,
   FormControlFeedback,
   FormControlLabel,
+  InputStepper,
   TextField
 } from "@sonnat/ui";
 import * as React from "react";
@@ -10,7 +11,7 @@ import validateInputByBrowser from "utils/validateByBrowser";
 
 interface NumberBaseProps {
   className?: string;
-  defaultValue?: string;
+  defaultValue?: number;
   required?: boolean;
   min?: number;
   max?: number;
@@ -27,11 +28,11 @@ type NumberProps = Omit<
   NumberBaseProps;
 
 interface FieldState {
-  value: string;
+  value: number;
   error: string;
 }
 type Action =
-  | { type: "SET_VALUE"; value: string }
+  | { type: "SET_VALUE"; value: number }
   | { type: "SET_ERROR"; error: string };
 type Reducer = (prevState: FieldState, action: Action) => FieldState;
 
@@ -55,13 +56,11 @@ const NumberBase = (props: NumberProps, ref: React.Ref<HTMLDivElement>) => {
     props;
 
   const [state, dispatch] = React.useReducer(reducer, {
-    value: defaultValue || "",
+    value: defaultValue || 0,
     error: ""
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-
+  const handleChange = (value: number) => {
     if (value !== state.value) {
       const error = validateInputByBrowser(value, {
         required,
@@ -88,14 +87,17 @@ const NumberBase = (props: NumberProps, ref: React.Ref<HTMLDivElement>) => {
   return (
     <FormControl hasError={!!state.error} required={props.required} ref={ref}>
       <FormControlLabel htmlFor={ids.input}>{title}</FormControlLabel>
-      <FormControlDescription id={ids.descriptor}>
-        {description}
-      </FormControlDescription>
-      <TextField
-        onChange={handleChange}
+      {!!description && (
+        <FormControlDescription id={ids.descriptor}>
+          {description}
+        </FormControlDescription>
+      )}
+      <InputStepper
+        onChange={(_, num) => handleChange(num)}
         value={state.value}
-        type="text"
-        inputProps={{ id: ids.input, "aria-describedby": ids.descriptor }}
+        min={min}
+        max={max}
+        fluid
       />
       {!!state.error && (
         <FormControlFeedback>{state.error}</FormControlFeedback>

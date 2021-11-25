@@ -93,7 +93,7 @@ const MultiLineTextBase = (
       data-index={index}
     >
       <FormControlLabel htmlFor={ids.input}>{title}</FormControlLabel>
-      {description && (
+      {!!description && (
         <FormControlDescription id={ids.descriptor}>
           {description}
         </FormControlDescription>

@@ -1,3 +1,4 @@
+import { Divider, Flex, Text } from "@sonnat/ui";
 import c from "classnames";
 import * as React from "react";
 import { isFragment } from "react-is";
@@ -21,6 +22,8 @@ interface ViewBaseProps {
   fields: React.ReactNode;
   id: string;
   index: number;
+  title?: string;
+  description?: string;
 }
 
 type ViewProps = Omit<React.ComponentPropsWithRef<"div">, keyof ViewBaseProps> &
@@ -33,9 +36,10 @@ const ViewBase = (props: ViewProps, ref: React.Ref<HTMLDivElement>) => {
     className,
     fields: fieldsProp,
     action,
+    title,
+    description,
     ...otherProps
   } = props;
-
   const classes = useStyles();
 
   const fieldActionRefs = React.useRef<React.Ref<FieldAction>[]>([]);
@@ -72,15 +76,28 @@ const ViewBase = (props: ViewProps, ref: React.Ref<HTMLDivElement>) => {
   });
 
   return (
-    <div
+    <Flex
+      direction="column"
+      mainAxisAlignment="center"
       id={id}
       ref={ref}
       data-index={`${indexProp}`}
       className={c(className, classes.root)}
       {...otherProps}
     >
-      {fields}
-    </div>
+      {(!!title || !!description) && (
+        <React.Fragment>
+          <Flex direction="column">
+            {!!title && <Text variant="h6">{title}</Text>}
+            {!!description && <Text variant="bodySmall">{description}</Text>}
+          </Flex>
+          <Divider spaced />
+        </React.Fragment>
+      )}
+      <Flex direction="column" style={{ gap: 16 }}>
+        {fields}
+      </Flex>
+    </Flex>
   );
 };
 

@@ -7,7 +7,11 @@ const useStyles = makeStyles(
       typography: { pxToRem }
     } = theme;
 
-    return { root: {} };
+    return {
+      root: {
+        minHeight: "calc(100vh - 52px)"
+      }
+    };
   },
   { name: "View" }
 );

@@ -8,7 +8,8 @@ import {
   RadioGroup,
   Radio,
   Flex,
-  Text
+  Text,
+  TextField
 } from "@sonnat/ui";
 import * as React from "react";
 import validateInputByBrowser from "utils/validateByBrowser";
@@ -26,12 +27,16 @@ interface ChoiceBaseProps {
   defaultValue?: string | string[];
   required?: boolean;
   multiple?: boolean;
+  max?: number;
   randomized?: boolean;
   options: Option[];
   title: string;
   description?: string;
   id: string;
   index: number;
+  allowOther?: boolean;
+  otherLabel?: string;
+  otherDescription?: string;
 }
 
 type ChoiceProps = Omit<
@@ -73,27 +78,34 @@ const ChoiceBase = (props: ChoiceProps, ref: React.Ref<HTMLDivElement>) => {
     defaultValue,
     options,
     multiple = false,
-    required
+    max,
+    required,
+    allowOther,
+    otherLabel,
+    otherDescription
   } = props;
-
+  console.log(props);
   const [state, dispatch] = React.useReducer(reducer, {
-    value: defaultValue || (multiple ? [""] : ""),
+    value: defaultValue || (multiple ? [] : ""),
     error: ""
   });
 
   const handleChange = (value: string | string[]) => {
+    console.log(value);
     if (value !== state.value) {
       const error = validateInputByBrowser(
         Array.isArray(value) ? value.join("") : value,
-        { required }
+        { required, maxLength: max }
       );
-      dispatch({
-        type: "SET_VALUE",
-        value
-      });
+      if (!error) {
+        dispatch({
+          type: "SET_VALUE",
+          value
+        });
+      }
       dispatch({
         type: "SET_ERROR",
-        error
+        error: error.replace("حرف", "تا")
       });
     }
   };
@@ -108,13 +120,14 @@ const ChoiceBase = (props: ChoiceProps, ref: React.Ref<HTMLDivElement>) => {
       data-index={index}
     >
       <FormControlLabel>{title}</FormControlLabel>
-      {description && (
+      {!!description && (
         <FormControlDescription>{description}</FormControlDescription>
       )}
       {multiple ? (
         <CheckGroup
           value={state.value as string[]}
           onChange={(_, selectedValues) => void handleChange(selectedValues)}
+          style={{ gap: 16 }}
         >
           {options.map(option => (
             <Flex direction="column" key={option.value}>
@@ -123,7 +136,7 @@ const ChoiceBase = (props: ChoiceProps, ref: React.Ref<HTMLDivElement>) => {
                 <Text
                   variant="caption"
                   color="textSecondary"
-                  style={{ whiteSpace: "pre-wrap" }}
+                  style={{ whiteSpace: "pre-wrap", marginRight: 12 }}
                 >
                   {option.description}
                 </Text>
@@ -135,23 +148,43 @@ const ChoiceBase = (props: ChoiceProps, ref: React.Ref<HTMLDivElement>) => {
         <RadioGroup
           value={state.value as string}
           onChange={(_, selectedValue) => void handleChange(selectedValue)}
+          style={{ gap: 16 }}
         >
           {options.map(option => (
             <Flex direction="column" key={option.value}>
               <Radio label={option.label} value={option.value} />
               {!!option.description && (
-                <Text variant="caption" color="textSecondary">
+                <Text
+                  variant="caption"
+                  color="textSecondary"
+                  style={{ marginRight: 12 }}
+                >
                   {option.description}
                 </Text>
               )}
             </Flex>
           ))}
+          {allowOther && (
+            <Flex direction="column">
+              <Radio label={otherLabel || "سایر"} value="-1" />
+              {!!otherDescription && (
+                <Text
+                  variant="caption"
+                  color="textSecondary"
+                  style={{ marginRight: 12 }}
+                >
+                  {otherDescription}
+                </Text>
+              )}
+            </Flex>
+          )}
         </RadioGroup>
       )}
 
       {!!state.error && (
         <FormControlFeedback>{state.error}</FormControlFeedback>
       )}
+      {state.value === "-1" && <TextField />}
     </FormControl>
   );
 };
