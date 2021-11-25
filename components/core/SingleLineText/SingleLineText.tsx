@@ -12,12 +12,13 @@ interface SingleLineTextBaseProps {
   className?: string;
   defaultValue?: string;
   pattern?: string;
-  min?: number;
-  max?: number;
   minLength?: number;
   maxLength?: number;
   required?: boolean;
-  type?: string;
+  title: string;
+  description?: string;
+  id: string;
+  index: number;
 }
 
 type SingleLineTextProps = Omit<
@@ -54,7 +55,7 @@ const SingleLineTextBase = (
   props: SingleLineTextProps,
   ref: React.Ref<HTMLDivElement>
 ) => {
-  const { defaultValue, ...otherProps } = props;
+  const { id, index, defaultValue, title, description, ...otherProps } = props;
 
   const [state, dispatch] = React.useReducer(reducer, {
     value: defaultValue || "",
@@ -77,11 +78,29 @@ const SingleLineTextBase = (
     }
   };
 
+  const ids = {
+    input: `textfield-${id}-${index}`,
+    descriptor: `descriptor-${id}-${index}`
+  };
+
   return (
-    <FormControl hasError={!!state.error} required={props.required} ref={ref}>
-      <FormControlLabel>Label</FormControlLabel>
-      <FormControlDescription>Description</FormControlDescription>
-      <TextField onChange={handleChange} value={state.value} />
+    <FormControl
+      fluid
+      hasError={!!state.error}
+      required={props.required}
+      ref={ref}
+      data-id={id}
+      data-index={index}
+    >
+      <FormControlLabel htmlFor={ids.input}>{title}</FormControlLabel>
+      <FormControlDescription id={ids.descriptor}>
+        {description}
+      </FormControlDescription>
+      <TextField
+        inputProps={{ id: ids.input, "aria-describedby": ids.descriptor }}
+        onChange={handleChange}
+        value={state.value}
+      />
       {!!state.error && (
         <FormControlFeedback>{state.error}</FormControlFeedback>
       )}

@@ -132,7 +132,7 @@ export interface GeneralProps<
   LogicalOperations extends Array<LogicalOperationsKeys>,
   T = unknown
 > {
-  defaultValue: T;
+  defaultValue?: T;
   required?: boolean;
   readOnly?: boolean;
   disabled?: boolean;
@@ -186,7 +186,7 @@ export type MultiLineTextFieldProps = GeneralProps<
 export type EmailFieldProps = GeneralProps<TextLogicalOperations, string>;
 export type URLFieldProps = GeneralProps<TextLogicalOperations, string>;
 export type NumberFieldProps = GeneralProps<TextLogicalOperations, "number">;
-export type SelectFieldProps = GeneralProps<TextLogicalOperations, string>;
+export type ChoiceFieldProps = GeneralProps<TextLogicalOperations, string>;
 
 export type FieldTypes = {
   SINGLE_LINE_TEXT: "SINGLE_LINE_TEXT";
@@ -195,7 +195,7 @@ export type FieldTypes = {
   URL: "URL";
   NUMBER: "NUMBER";
   CONDITION: "CONDITION";
-  SELECT: "SELECT";
+  CHOICE: "CHOICE";
 };
 
 export type FieldProps =
@@ -204,7 +204,7 @@ export type FieldProps =
   | EmailFieldProps
   | URLFieldProps
   | NumberFieldProps
-  | SelectFieldProps;
+  | ChoiceFieldProps;
 
 export interface FieldParams {
   title: string;
