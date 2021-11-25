@@ -5,7 +5,7 @@ import type {
   FieldTypes,
   MultiLineTextFieldProps,
   NumberFieldProps,
-  SelectFieldProps,
+  ChoiceFieldProps,
   SingleLineTextFieldProps,
   URLFieldProps
 } from "types";
@@ -30,7 +30,7 @@ export default abstract class Field {
     URL: "URL",
     NUMBER: "NUMBER",
     CONDITION: "CONDITION",
-    SELECT: "SELECT"
+    CHOICE: "CHOICE"
   };
 
   constructor(view: View, params: FieldParams) {
@@ -90,7 +90,7 @@ export default abstract class Field {
 export class SingleLineTextField extends Field {
   constructor(
     view: View,
-    params: FieldParams & {
+    params: Omit<FieldParams, "type"> & {
       props: Omit<SingleLineTextFieldProps, "allowedOperations">;
     }
   ) {
@@ -109,7 +109,7 @@ export class SingleLineTextField extends Field {
 export class MultiLineTextField extends Field {
   constructor(
     view: View,
-    params: FieldParams & {
+    params: Omit<FieldParams, "type"> & {
       props: Omit<MultiLineTextFieldProps, "allowedOperations">;
     }
   ) {
@@ -128,7 +128,7 @@ export class MultiLineTextField extends Field {
 export class EmailField extends Field {
   constructor(
     view: View,
-    params: FieldParams & {
+    params: Omit<FieldParams, "type"> & {
       props: Omit<EmailFieldProps, "allowedOperations">;
     }
   ) {
@@ -147,7 +147,7 @@ export class EmailField extends Field {
 export class URLField extends Field {
   constructor(
     view: View,
-    params: FieldParams & {
+    params: Omit<FieldParams, "type"> & {
       props: Omit<URLFieldProps, "allowedOperations">;
     }
   ) {
@@ -166,7 +166,7 @@ export class URLField extends Field {
 export class NumberField extends Field {
   constructor(
     view: View,
-    params: FieldParams & {
+    params: Omit<FieldParams, "type"> & {
       props: Omit<NumberFieldProps, "allowedOperations">;
     }
   ) {
@@ -182,21 +182,21 @@ export class NumberField extends Field {
   }
 }
 
-export class SelectField extends Field {
+export class ChoiceField extends Field {
   constructor(
     view: View,
-    params: FieldParams & {
-      props: Omit<SelectFieldProps, "allowedOperations">;
+    params: Omit<FieldParams, "type"> & {
+      props: Omit<ChoiceFieldProps, "allowedOperations">;
     }
   ) {
     const { props, ...otherParams } = params;
 
-    super(view, { ...otherParams, type: Field.Types.SELECT });
+    super(view, { ...otherParams, type: Field.Types.CHOICE });
 
     this.props = props;
   }
 
-  public setProps(props: SelectFieldProps) {
+  public setProps(props: ChoiceFieldProps) {
     this.props = props;
   }
 }

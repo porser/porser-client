@@ -34,7 +34,7 @@ export default class Form {
       case "MULTI_LINE_TEXT":
       case "SINGLE_LINE_TEXT":
       case "NUMBER":
-      case "SELECT":
+      case "CHOICE":
         return { ...base, description: field.getDescription() };
       case "CONDITION":
       default:
