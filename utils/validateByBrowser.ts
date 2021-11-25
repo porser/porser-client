@@ -16,7 +16,7 @@ const isUndefined = <T>(input: T): input is IsUndefined<T> =>
 const validateByBrowser = (
   value: string | number,
   options: ValidityOptions
-): string | undefined => {
+): string => {
   const {
     pattern,
     min,
@@ -64,7 +64,7 @@ const validateByBrowser = (
     key => input.validity[<keyof ValidityState>key]
   );
 
-  if (!currentErrorKey) return;
+  if (!currentErrorKey) return "";
 
   return messages[<keyof typeof messages>currentErrorKey];
 };

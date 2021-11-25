@@ -28,11 +28,11 @@ type SingleLineTextProps = Omit<
 
 interface FieldState {
   value: string;
-  error?: string | null;
+  error: string;
 }
 type Action =
   | { type: "SET_VALUE"; value: string }
-  | { type: "SET_ERROR"; error?: string | null };
+  | { type: "SET_ERROR"; error: string };
 type Reducer = (prevState: FieldState, action: Action) => FieldState;
 
 const reducer: Reducer = (prevState, action) => {
@@ -57,7 +57,8 @@ const SingleLineTextBase = (
   const { defaultValue, ...otherProps } = props;
 
   const [state, dispatch] = React.useReducer(reducer, {
-    value: defaultValue || ""
+    value: defaultValue || "",
+    error: ""
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -81,7 +82,9 @@ const SingleLineTextBase = (
       <FormControlLabel>Label</FormControlLabel>
       <FormControlDescription>Description</FormControlDescription>
       <TextField onChange={handleChange} value={state.value} />
-      {state.error && <FormControlFeedback>{state.error}</FormControlFeedback>}
+      {!!state.error && (
+        <FormControlFeedback>{state.error}</FormControlFeedback>
+      )}
     </FormControl>
   );
 };
