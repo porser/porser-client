@@ -3,7 +3,6 @@ const validateEmailByBrowser = (email: string): boolean => {
 
   input.type = "email";
   input.value = email;
-  input.required = true;
 
   return input.checkValidity();
 };
