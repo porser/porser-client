@@ -81,7 +81,7 @@ const NumberBase = (props: NumberProps, ref: React.Ref<HTMLDivElement>) => {
   };
 
   const ids = {
-    input: `textfield-${id}-${index}`,
+    input: `field-${id}-${index}`,
     descriptor: `descriptor-${id}-${index}`
   };
 
