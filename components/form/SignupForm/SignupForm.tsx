@@ -1,4 +1,4 @@
-import { Eye, EyeO } from "@sonnat/icons";
+import { Eye, EyeO, Heart } from "@sonnat/icons";
 import {
   Button,
   FormControl,
@@ -22,7 +22,7 @@ interface SignupFormBaseProps {
 }
 
 type SignupFormProps = Omit<
-  React.ComponentPropsWithRef<"form">,
+  React.ComponentPropsWithRef<"div">,
   keyof SignupFormBaseProps
 > &
   SignupFormBaseProps;
@@ -93,7 +93,7 @@ const UserAPI = makeUserAPI(feathersClient);
 
 const SignupFormBase = (
   props: SignupFormProps,
-  ref: React.Ref<HTMLFormElement>
+  ref: React.Ref<HTMLDivElement>
 ) => {
   const { className, ...otherProps } = props;
 
@@ -234,83 +234,98 @@ const SignupFormBase = (
   }, [inputs]);
 
   return (
-    <form
-      ref={ref}
-      onSubmit={e => void submit(e)}
-      className={c(className, classes.root)}
-      {...otherProps}
-    >
-      {globalError && <div className={classes.formError}>{globalError}</div>}
-      <Text variant="h6" rootNode="h1" className={classes.title}>
-        به پُرسِر خوش‌آمدید!
-      </Text>
-      <Text variant="bodySmall" rootNode="p" color="textSecondary">
-        برای ثبت‌نام، ایمیل و رمز عبور خود را وارد کنید:
-      </Text>
-      <FormControl
-        className={classes.formControl}
-        fluid
-        required
-        hasError={!!inputs.email.error}
-      >
-        <TextField
-          placeholder="ایمیل"
-          name="email"
+    <div className={c(className, classes.root)} ref={ref} {...otherProps}>
+      <form className={classes.form} onSubmit={e => void submit(e)}>
+        {globalError && <div className={classes.formError}>{globalError}</div>}
+        <Text variant="h6" rootNode="h1" className={classes.title}>
+          به پُرسِر خوش‌آمدید!
+        </Text>
+        <Text variant="bodySmall" rootNode="p" color="textSecondary">
+          برای ثبت‌نام، ایمیل و رمز عبور خود را وارد کنید:
+        </Text>
+        <FormControl
+          className={classes.formControl}
+          fluid
+          required
+          hasError={!!inputs.email.error}
+        >
+          <TextField
+            placeholder="ایمیل"
+            name="email"
+            size="large"
+            value={inputs.email.value}
+            onChange={handleTextChange}
+          />
+          {inputs.email.error && (
+            <FormControlFeedback>{inputs.email.error}</FormControlFeedback>
+          )}
+        </FormControl>
+        <FormControl
+          className={classes.formControl}
+          fluid
+          required
+          hasError={!!inputs.password.error}
+        >
+          <TextField
+            placeholder="رمز عبور"
+            type={passwordInputType}
+            name="password"
+            size="large"
+            value={inputs.password.value}
+            onChange={handleTextChange}
+            trailingAdornment={
+              <InputAdornment
+                variant="icon"
+                onClick={() => void handlePasswordVisibility()}
+              >
+                {!isPasswordVisible ? <EyeO /> : <Eye />}
+              </InputAdornment>
+            }
+          />
+          {inputs.password.error && (
+            <FormControlFeedback>{inputs.password.error}</FormControlFeedback>
+          )}
+        </FormControl>
+        <Button
+          className={classes.submitBtn}
+          type="submit"
+          color="primary"
+          label="ثبت‌نام"
           size="large"
-          value={inputs.email.value}
-          onChange={handleTextChange}
+          loading={isSubmitting}
+          disabled={!isSubmitActive}
         />
-        {inputs.email.error && (
-          <FormControlFeedback>{inputs.email.error}</FormControlFeedback>
-        )}
-      </FormControl>
-      <FormControl
-        className={classes.formControl}
-        fluid
-        required
-        hasError={!!inputs.password.error}
-      >
-        <TextField
-          placeholder="رمز عبور"
-          type={passwordInputType}
-          name="password"
-          size="large"
-          value={inputs.password.value}
-          onChange={handleTextChange}
-          trailingAdornment={
-            <InputAdornment
-              variant="icon"
-              onClick={() => void handlePasswordVisibility()}
-            >
-              {!isPasswordVisible ? <EyeO /> : <Eye />}
-            </InputAdornment>
-          }
+        <Text
+          variant="bodySmall"
+          rootNode="p"
+          color="textSecondary"
+          className={classes.footer}
+        >
+          <span>حساب کاربری دارم:</span>
+          <Link href="/login">
+            <a title="ورود به حساب کاربری">ورود</a>
+          </Link>
+        </Text>
+      </form>
+      <div className={classes.copyright}>
+        <img
+          className={classes.logo}
+          src="/static/media/porser.svg"
+          alt="Porser's Logo"
         />
-        {inputs.password.error && (
-          <FormControlFeedback>{inputs.password.error}</FormControlFeedback>
-        )}
-      </FormControl>
-      <Button
-        className={classes.submitBtn}
-        type="submit"
-        color="primary"
-        label="ثبت‌نام"
-        size="large"
-        loading={isSubmitting}
-        disabled={!isSubmitActive}
-      />
-      <Text
-        variant="bodySmall"
-        rootNode="p"
-        color="textSecondary"
-        className={classes.footer}
-      >
-        <span>حساب کاربری دارم:</span>
-        <Link href="/login">
-          <a title="ورود به حساب کاربری">ورود</a>
-        </Link>
-      </Text>
-    </form>
+        <div className={classes.copyrightDivider}></div>
+        <Text
+          variant="caption"
+          rootNode="p"
+          color="textHint"
+          className={classes.copyrightText}
+        >
+          Powered by <Heart size={12} color="primary" />
+          <br />
+          Made at Hackathon
+        </Text>
+      </div>
+    </div>
   );
 };
 

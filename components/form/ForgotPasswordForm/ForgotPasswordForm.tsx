@@ -1,3 +1,4 @@
+import { Heart } from "@sonnat/icons";
 import {
   Button,
   FormControl,
@@ -18,7 +19,7 @@ interface ForgotPasswordFormBaseProps {
 }
 
 type ForgotPasswordFormProps = Omit<
-  React.ComponentPropsWithRef<"form">,
+  React.ComponentPropsWithRef<"div">,
   keyof ForgotPasswordFormBaseProps
 > &
   ForgotPasswordFormBaseProps;
@@ -85,7 +86,7 @@ const pwdManagementAPI = makePwdManagementAPI(feathersClient);
 
 const ForgotPasswordFormBase = (
   props: ForgotPasswordFormProps,
-  ref: React.Ref<HTMLFormElement>
+  ref: React.Ref<HTMLDivElement>
 ) => {
   const { className, ...otherProps } = props;
 
@@ -180,78 +181,116 @@ const ForgotPasswordFormBase = (
 
   if (successMessage)
     return (
-      <form className={c(className, classes.root, "success")} {...otherProps}>
+      <div className={c(className, classes.root)} ref={ref} {...otherProps}>
+        <form
+          className={c(classes.form, "success")}
+          onSubmit={e => void submit(e)}
+        >
+          <Text variant="h6" rootNode="h1" className={classes.title}>
+            ایمیل بازیابی ارسال شد!
+          </Text>
+          <Text variant="bodySmall" rootNode="p" color="textSecondary">
+            {successMessage}
+          </Text>
+          <Text
+            variant="bodySmall"
+            rootNode="p"
+            color="textSecondary"
+            className={classes.footer}
+          >
+            <Link href="/login">
+              <a title="ورود به حساب کاربری">بازگشت به ورود</a>
+            </Link>
+          </Text>
+        </form>
+        <div className={classes.copyright}>
+          <img
+            className={classes.logo}
+            src="/static/media/porser.svg"
+            alt="Porser's Logo"
+          />
+          <div className={classes.copyrightDivider}></div>
+          <Text
+            variant="caption"
+            rootNode="p"
+            color="textHint"
+            className={classes.copyrightText}
+          >
+            Powered by <Heart size={12} color="primary" />
+            <br />
+            Made at Hackathon
+          </Text>
+        </div>
+      </div>
+    );
+
+  return (
+    <div className={c(className, classes.root)} ref={ref} {...otherProps}>
+      <form className={classes.form} onSubmit={e => void submit(e)}>
+        {globalError && <div className={classes.formError}>{globalError}</div>}
         <Text variant="h6" rootNode="h1" className={classes.title}>
-          ایمیل بازیابی ارسال شد!
+          بازیابی رمز عبور
         </Text>
         <Text variant="bodySmall" rootNode="p" color="textSecondary">
-          {successMessage}
+          ایمیل خود را جهت بازیابی رمز عبور وارد کنید:
         </Text>
+        <FormControl
+          className={classes.formControl}
+          fluid
+          required
+          hasError={!!inputs.email.error}
+        >
+          <TextField
+            placeholder="ایمیل"
+            name="email"
+            size="large"
+            value={inputs.email.value}
+            onChange={handleTextChange}
+          />
+          {inputs.email.error && (
+            <FormControlFeedback>{inputs.email.error}</FormControlFeedback>
+          )}
+        </FormControl>
+        <Button
+          className={classes.submitBtn}
+          type="submit"
+          color="primary"
+          label="بازیابی"
+          size="large"
+          loading={isSubmitting}
+          disabled={!isSubmitActive}
+        />
         <Text
           variant="bodySmall"
           rootNode="p"
           color="textSecondary"
           className={classes.footer}
         >
+          <span>منصرف شدم:</span>
           <Link href="/login">
             <a title="ورود به حساب کاربری">بازگشت به ورود</a>
           </Link>
         </Text>
       </form>
-    );
-
-  return (
-    <form
-      ref={ref}
-      onSubmit={e => void submit(e)}
-      className={c(className, classes.root)}
-      {...otherProps}
-    >
-      {globalError && <div className={classes.formError}>{globalError}</div>}
-      <Text variant="h6" rootNode="h1" className={classes.title}>
-        بازیابی رمز عبور
-      </Text>
-      <Text variant="bodySmall" rootNode="p" color="textSecondary">
-        ایمیل خود را جهت بازیابی رمز عبور وارد کنید:
-      </Text>
-      <FormControl
-        className={classes.formControl}
-        fluid
-        required
-        hasError={!!inputs.email.error}
-      >
-        <TextField
-          placeholder="ایمیل"
-          name="email"
-          size="large"
-          value={inputs.email.value}
-          onChange={handleTextChange}
+      <div className={classes.copyright}>
+        <img
+          className={classes.logo}
+          src="/static/media/porser.svg"
+          alt="Porser's Logo"
         />
-        {inputs.email.error && (
-          <FormControlFeedback>{inputs.email.error}</FormControlFeedback>
-        )}
-      </FormControl>
-      <Button
-        className={classes.submitBtn}
-        type="submit"
-        color="primary"
-        label="بازیابی"
-        size="large"
-        loading={isSubmitting}
-        disabled={!isSubmitActive}
-      />
-      <Text
-        variant="bodySmall"
-        rootNode="p"
-        color="textSecondary"
-        className={classes.footer}
-      >
-        <span>منصرف شدم:</span>
-        <Link href="/login">
-          <a title="ورود به حساب کاربری">بازگشت به ورود</a>
-        </Link>
-      </Text>
-    </form>
+        <div className={classes.copyrightDivider}></div>
+        <Text
+          variant="caption"
+          rootNode="p"
+          color="textHint"
+          className={classes.copyrightText}
+        >
+          Powered by <Heart size={12} color="primary" />
+          <br />
+          Made at Hackathon
+        </Text>
+      </div>
+    </div>
   );
 };
 

@@ -1,4 +1,4 @@
-import { Eye, EyeO } from "@sonnat/icons";
+import { Eye, EyeO, Heart } from "@sonnat/icons";
 import {
   Button,
   FormControl,
@@ -20,7 +20,7 @@ interface ResetPasswordFormBaseProps {
 }
 
 type ResetPasswordFormProps = Omit<
-  React.ComponentPropsWithRef<"form">,
+  React.ComponentPropsWithRef<"div">,
   keyof ResetPasswordFormBaseProps
 > &
   ResetPasswordFormBaseProps;
@@ -87,7 +87,7 @@ const pwdManagementAPI = makePwdManagementAPI(feathersClient);
 
 const ResetPasswordFormBase = (
   props: ResetPasswordFormProps,
-  ref: React.Ref<HTMLFormElement>
+  ref: React.Ref<HTMLDivElement>
 ) => {
   const { token, className, ...otherProps } = props;
 
@@ -190,76 +190,114 @@ const ResetPasswordFormBase = (
 
   if (successMessage)
     return (
-      <form className={c(className, classes.root, "success")} {...otherProps}>
-        <Text variant="h6" rootNode="h1" className={classes.title}>
-          رمز عبور شما با موفقیت بازنشانی شد!
-        </Text>
-        <Text variant="bodySmall" rootNode="p" color="textSecondary">
-          {successMessage}
-        </Text>
-        <Text
-          variant="bodySmall"
-          rootNode="p"
-          color="textSecondary"
-          className={classes.footer}
+      <div className={c(className, classes.root)} ref={ref} {...otherProps}>
+        <form
+          className={c(classes.form, "success")}
+          onSubmit={e => void submit(e)}
         >
-          <Link href="/login">
-            <a title="ورود به حساب کاربری">بازگشت به ورود</a>
-          </Link>
-        </Text>
-      </form>
+          <Text variant="h6" rootNode="h1" className={classes.title}>
+            رمز عبور شما با موفقیت بازنشانی شد!
+          </Text>
+          <Text variant="bodySmall" rootNode="p" color="textSecondary">
+            {successMessage}
+          </Text>
+          <Text
+            variant="bodySmall"
+            rootNode="p"
+            color="textSecondary"
+            className={classes.footer}
+          >
+            <Link href="/login">
+              <a title="ورود به حساب کاربری">بازگشت به ورود</a>
+            </Link>
+          </Text>
+        </form>
+        <div className={classes.copyright}>
+          <img
+            className={classes.logo}
+            src="/static/media/porser.svg"
+            alt="Porser's Logo"
+          />
+          <div className={classes.copyrightDivider}></div>
+          <Text
+            variant="caption"
+            rootNode="p"
+            color="textHint"
+            className={classes.copyrightText}
+          >
+            Powered by <Heart size={12} color="primary" />
+            <br />
+            Made at Hackathon
+          </Text>
+        </div>
+      </div>
     );
 
   return (
-    <form
-      ref={ref}
-      onSubmit={e => void submit(e)}
-      className={c(className, classes.root)}
-      {...otherProps}
-    >
-      {globalError && <div className={classes.formError}>{globalError}</div>}
-      <Text variant="h6" rootNode="h1" className={classes.title}>
-        بازنشانی رمز عبور
-      </Text>
-      <Text variant="bodySmall" rootNode="p" color="textSecondary">
-        برای بازنشانی، رمز عبور جدید خود را وارد کنید:
-      </Text>
-      <FormControl
-        className={classes.formControl}
-        fluid
-        required
-        hasError={!!inputs.password.error}
-      >
-        <TextField
-          placeholder="رمز عبور"
-          type={passwordInputType}
-          name="password"
+    <div className={c(className, classes.root)} ref={ref} {...otherProps}>
+      <form className={classes.form} onSubmit={e => void submit(e)}>
+        {globalError && <div className={classes.formError}>{globalError}</div>}
+        <Text variant="h6" rootNode="h1" className={classes.title}>
+          بازنشانی رمز عبور
+        </Text>
+        <Text variant="bodySmall" rootNode="p" color="textSecondary">
+          برای بازنشانی، رمز عبور جدید خود را وارد کنید:
+        </Text>
+        <FormControl
+          className={classes.formControl}
+          fluid
+          required
+          hasError={!!inputs.password.error}
+        >
+          <TextField
+            placeholder="رمز عبور"
+            type={passwordInputType}
+            name="password"
+            size="large"
+            value={inputs.password.value}
+            onChange={handleTextChange}
+            trailingAdornment={
+              <InputAdornment
+                variant="icon"
+                onClick={() => void handlePasswordVisibility()}
+              >
+                {!isPasswordVisible ? <EyeO /> : <Eye />}
+              </InputAdornment>
+            }
+          />
+          {inputs.password.error && (
+            <FormControlFeedback>{inputs.password.error}</FormControlFeedback>
+          )}
+        </FormControl>
+        <Button
+          className={classes.submitBtn}
+          type="submit"
+          color="primary"
+          label="ورود"
           size="large"
-          value={inputs.password.value}
-          onChange={handleTextChange}
-          trailingAdornment={
-            <InputAdornment
-              variant="icon"
-              onClick={() => void handlePasswordVisibility()}
-            >
-              {!isPasswordVisible ? <EyeO /> : <Eye />}
-            </InputAdornment>
-          }
+          loading={isSubmitting}
+          disabled={!isSubmitActive}
         />
-        {inputs.password.error && (
-          <FormControlFeedback>{inputs.password.error}</FormControlFeedback>
-        )}
-      </FormControl>
-      <Button
-        className={classes.submitBtn}
-        type="submit"
-        color="primary"
-        label="ورود"
-        size="large"
-        loading={isSubmitting}
-        disabled={!isSubmitActive}
-      />
-    </form>
+      </form>
+      <div className={classes.copyright}>
+        <img
+          className={classes.logo}
+          src="/static/media/porser.svg"
+          alt="Porser's Logo"
+        />
+        <div className={classes.copyrightDivider}></div>
+        <Text
+          variant="caption"
+          rootNode="p"
+          color="textHint"
+          className={classes.copyrightText}
+        >
+          Powered by <Heart size={12} color="primary" />
+          <br />
+          Made at Hackathon
+        </Text>
+      </div>
+    </div>
   );
 };
 
