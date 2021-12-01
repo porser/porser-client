@@ -13,7 +13,7 @@ const useStyles = makeStyles(
       }
     };
   },
-  { name: "View" }
+  { name: "ViewWrapper" }
 );
 
 export default useStyles;

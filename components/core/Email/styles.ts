@@ -4,7 +4,7 @@ const useStyles = makeStyles(
   {
     root: {}
   },
-  { name: "SingleLineText" }
+  { name: "Email" }
 );
 
 export default useStyles;
