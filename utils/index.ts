@@ -8,6 +8,7 @@ export {
 export { default as env } from "./env";
 export { default as is404Page } from "./is404Page";
 export { default as is500Page } from "./is500Page";
+export { default as random } from "./random";
 export { default as removeAccessToken } from "./removeAccessToken";
 export { default as removeRefreshToken } from "./removeRefreshToken";
 export { default as renderErrorPage } from "./renderErrorPage";
@@ -20,6 +21,6 @@ export { default as setTitleMeta } from "./setTitleMeta";
 export { default as storeAccessToken } from "./storeAccessToken";
 export { default as storeRefreshToken } from "./storeRefreshToken";
 export { default as useConfirmAuthentication } from "./useConfirmAuthentication";
-export { default as validateByBrowser } from "./validateByBrowser";
 export { default as validateEmailByBrowser } from "./validateEmailByBrowser";
+export { default as validateInputByBrowser } from "./validateInputByBrowser";
 export { default as withServerSideAuthConfirmation } from "./withServerSideAuthConfirmation";
