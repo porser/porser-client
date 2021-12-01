@@ -3,6 +3,8 @@ export type ValidityOptions = {
   min?: number;
   max?: number;
   minLength?: number;
+  minRequired?: number;
+  maxRequired?: number;
   maxLength?: number;
   required?: boolean;
   type?: string;
@@ -13,7 +15,10 @@ type IsUndefined<T> = T extends undefined ? T : never;
 const isUndefined = <T>(input: T): input is IsUndefined<T> =>
   typeof input === "undefined";
 
-const validateByBrowser = (
+const numberToLocaleString = (input?: number) =>
+  input ? input.toLocaleString("fa-ir", { useGrouping: false }) : "";
+
+const validateInputByBrowser = (
   value: string | number,
   options: ValidityOptions
 ): string => {
@@ -23,10 +28,29 @@ const validateByBrowser = (
     max,
     minLength,
     maxLength,
+    minRequired,
+    maxRequired,
     required = false,
     type = "text"
   } = options;
+
   const input = document.createElement("input");
+
+  const messages = {
+    patternMismatch: "عبارت وارد‌شده نامعتبر است",
+    typeMismatch: "عبارت وارد‌شده نامعتبر است",
+    rangeOverflow: `حداکثر ${numberToLocaleString(max)}`,
+    rangeUnderflow: `حداقل ${numberToLocaleString(min)}`,
+    tooLong: `حداکثر ${numberToLocaleString(maxLength)} حرف باید وارد شود`,
+    tooShort: `حداقل ${numberToLocaleString(minLength)} حرف باید وارد شود`,
+    lessSelected: `حداقل ${numberToLocaleString(
+      minRequired
+    )} گزینه باید انتخاب شود`,
+    moreSelected: `حداکثر ${numberToLocaleString(
+      maxRequired
+    )} گزینه باید انتخاب شود`,
+    valueMissing: "پرکردن این قسمت اجباری است"
+  };
 
   input.type = type;
   input.value = <string>value;
@@ -37,23 +61,17 @@ const validateByBrowser = (
   if (!isUndefined(max)) input.max = String(max);
   if (!isUndefined(min)) input.min = String(min);
   if (!isUndefined(required)) input.required = required;
-  const messages = {
-    patternMismatch: "عبارت وارد‌شده نامعتبر است",
-    typeMismatch: "عبارت وارد‌شده نامعتبر است",
-    rangeOverflow: `حداکثر ${Number(max).toLocaleString("fa-ir", {
-      useGrouping: false
-    })}`,
-    rangeUnderflow: `حداقل ${Number(min).toLocaleString("fa-ir", {
-      useGrouping: false
-    })}`,
-    tooLong: `حداکثر ${Number(maxLength).toLocaleString("fa-ir", {
-      useGrouping: false
-    })} حرف`,
-    tooShort: `حداقل ${Number(minLength).toLocaleString("fa-ir", {
-      useGrouping: false
-    })} حرف`,
-    valueMissing: "پرکردن این قسمت اجباری است"
-  };
+
+  if (
+    !isUndefined(minRequired) &&
+    String(value).split(",").length < minRequired
+  )
+    return messages.lessSelected;
+  if (
+    !isUndefined(maxRequired) &&
+    String(value).split(",").length > maxRequired
+  )
+    return messages.moreSelected;
 
   if (!isUndefined(minLength) && String(value).length < minLength)
     return messages.tooShort;
@@ -72,4 +90,4 @@ const validateByBrowser = (
   return messages[<keyof typeof messages>currentErrorKey];
 };
 
-export default validateByBrowser;
+export default validateInputByBrowser;
