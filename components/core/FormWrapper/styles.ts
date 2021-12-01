@@ -22,7 +22,7 @@ const useStyles = makeStyles(
       }
     };
   },
-  { name: "Form" }
+  { name: "FormWrapper" }
 );
 
 export default useStyles;
