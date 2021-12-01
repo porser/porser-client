@@ -2,12 +2,12 @@ import makeStyles from "@sonnat/ui/styles/makeStyles";
 import Text from "@sonnat/ui/Text";
 import makeUserAPI from "apis/user.api";
 import AuthLayout from "components/layout/AuthLayout";
+import feathersClient from "modules/feathers/client";
 import type { GetServerSideProps } from "next";
 import Head from "next/head";
 import * as React from "react";
 import type { Layout, NextPageWithLayout } from "types";
 import { renderErrorPage, setTitleMeta } from "utils";
-import feathersClient from "utils/feathers/client";
 import type { ErrorType } from "utils/useConfirmAuthentication";
 
 const useStyles = makeStyles(

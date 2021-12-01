@@ -4,9 +4,9 @@ import {
   INVALID_LINK_ERROR,
   SERVER_ERROR
 } from "constants.app";
+import type { FeathersClient } from "modules/feathers/client";
 import type { IUserRaw } from "types";
 import { removeRefreshToken, retrieveRefreshToken } from "utils";
-import type { FeathersClient } from "utils/feathers/client";
 
 type Response<T> = {
   error: boolean;

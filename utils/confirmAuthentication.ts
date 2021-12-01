@@ -1,8 +1,8 @@
 import makeTokenAPI from "apis/token.api";
 import decode from "jwt-decode";
+import feathersClient from "modules/feathers/client";
 import type { GetServerSidePropsContext } from "next";
 import { retrieveRefreshToken } from "utils";
-import feathersClient from "utils/feathers/client";
 
 interface Response {
   data?: {

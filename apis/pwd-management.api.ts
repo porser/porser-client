@@ -5,8 +5,8 @@ import {
   SERVER_ERROR,
   USER_NOT_VERIFIED
 } from "constants.app";
+import type { FeathersClient } from "modules/feathers/client";
 import type { IUserRaw } from "types";
-import type { FeathersClient } from "utils/feathers/client";
 
 type Response<T> = {
   error: boolean;

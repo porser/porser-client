@@ -9,12 +9,12 @@ import {
 } from "@sonnat/ui";
 import makeUserAPI from "apis/user.api";
 import c from "classnames";
+import feathersClient from "modules/feathers/client";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import * as React from "react";
 import { useAuthState } from "store";
 import { storeRefreshToken, validateEmailByBrowser } from "utils";
-import feathersClient from "utils/feathers/client";
 import useStyles from "./styles";
 
 interface LoginFormBaseProps {

@@ -1,7 +1,7 @@
 import { FeathersError } from "@feathersjs/errors";
 import { CONNECTION_ERROR, SERVER_ERROR } from "constants.app";
 import type { IUserRaw } from "types";
-import type { FeathersClient } from "utils/feathers/client";
+import type { FeathersClient } from "modules/feathers/client";
 
 type Response<T> = {
   error: boolean;

@@ -9,9 +9,9 @@ import {
 } from "@sonnat/ui";
 import makePwdManagementAPI from "apis/pwd-management.api";
 import c from "classnames";
+import feathersClient from "modules/feathers/client";
 import Link from "next/link";
 import * as React from "react";
-import feathersClient from "utils/feathers/client";
 import useStyles from "./styles";
 
 interface ResetPasswordFormBaseProps {
