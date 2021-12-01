@@ -6,8 +6,8 @@ import useStyles from "./styles";
 
 export type Action = {
   reset: () => void;
-  getId: () => ViewBaseProps["id"];
-  getIndex: () => ViewBaseProps["index"];
+  getId: () => ViewWrapperBaseProps["id"];
+  getIndex: () => ViewWrapperBaseProps["index"];
   getStates: () => unknown;
 };
 
@@ -16,7 +16,7 @@ export type FieldAction = {
   getState: () => unknown;
 };
 
-interface ViewBaseProps {
+interface ViewWrapperBaseProps {
   className?: string;
   action?: React.Ref<Action>;
   fields: React.ReactNode;
@@ -26,10 +26,16 @@ interface ViewBaseProps {
   description?: string;
 }
 
-type ViewProps = Omit<React.ComponentPropsWithRef<"div">, keyof ViewBaseProps> &
-  ViewBaseProps;
+type ViewWrapperProps = Omit<
+  React.ComponentPropsWithRef<"div">,
+  keyof ViewWrapperBaseProps
+> &
+  ViewWrapperBaseProps;
 
-const ViewBase = (props: ViewProps, ref: React.Ref<HTMLDivElement>) => {
+const ViewWrapperBase = (
+  props: ViewWrapperProps,
+  ref: React.Ref<HTMLDivElement>
+) => {
   const {
     id,
     index: indexProp,
@@ -101,6 +107,6 @@ const ViewBase = (props: ViewProps, ref: React.Ref<HTMLDivElement>) => {
   );
 };
 
-const View = React.forwardRef(ViewBase) as typeof ViewBase;
+const ViewWrapper = React.forwardRef(ViewWrapperBase) as typeof ViewWrapperBase;
 
-export default View;
+export default ViewWrapper;
