@@ -1,6 +1,8 @@
 export { default as Choice } from "./Choice";
-export { default as Form } from "./Form";
+export { default as Email } from "./Email";
+export { default as FormWrapper } from "./FormWrapper";
 export { default as MultiLineText } from "./MultiLineText";
+export { default as Number } from "./Number";
 export { default as SingleLineText } from "./SingleLineText";
-export { default as View } from "./View";
-export { default as URL } from "./Url";
+export { default as URL } from "./URL";
+export { default as ViewWrapper } from "./ViewWrapper";

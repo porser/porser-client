@@ -3,18 +3,21 @@ import {
   FormControlDescription,
   FormControlFeedback,
   FormControlLabel,
-  InputStepper,
-  TextField
+  InputStepper
 } from "@sonnat/ui";
 import * as React from "react";
-import validateInputByBrowser from "utils/validateByBrowser";
+import validateInputByBrowser from "utils/validateInputByBrowser";
 
 interface NumberBaseProps {
   className?: string;
+
   defaultValue?: number;
-  required?: boolean;
+
+  pattern?: string;
   min?: number;
   max?: number;
+  required?: boolean;
+
   title: string;
   description?: string;
   id: string;
@@ -52,11 +55,23 @@ const reducer: Reducer = (prevState, action) => {
 };
 
 const NumberBase = (props: NumberProps, ref: React.Ref<HTMLDivElement>) => {
-  const { id, index, defaultValue, title, description, required, min, max } =
-    props;
+  const {
+    id,
+    index,
+    title,
+    description = "",
+
+    defaultValue = 0,
+
+    required,
+    min,
+    max,
+
+    ...otherProps
+  } = props;
 
   const [state, dispatch] = React.useReducer(reducer, {
-    value: defaultValue || 0,
+    value: defaultValue,
     error: ""
   });
 
@@ -68,6 +83,7 @@ const NumberBase = (props: NumberProps, ref: React.Ref<HTMLDivElement>) => {
         max,
         type: "number"
       });
+
       dispatch({
         type: "SET_VALUE",
         value
@@ -85,9 +101,17 @@ const NumberBase = (props: NumberProps, ref: React.Ref<HTMLDivElement>) => {
   };
 
   return (
-    <FormControl hasError={!!state.error} required={props.required} ref={ref}>
+    <FormControl
+      fluid
+      hasError={!!state.error}
+      required={props.required}
+      ref={ref}
+      data-id={id}
+      data-index={index}
+      {...otherProps}
+    >
       <FormControlLabel htmlFor={ids.input}>{title}</FormControlLabel>
-      {!!description && (
+      {!!description.length && (
         <FormControlDescription id={ids.descriptor}>
           {description}
         </FormControlDescription>
@@ -97,7 +121,6 @@ const NumberBase = (props: NumberProps, ref: React.Ref<HTMLDivElement>) => {
         value={state.value}
         min={min}
         max={max}
-        fluid
       />
       {!!state.error && (
         <FormControlFeedback>{state.error}</FormControlFeedback>

@@ -1,42 +1,44 @@
 import {
+  Checkbox,
+  CheckGroup,
+  Flex,
   FormControl,
   FormControlDescription,
   FormControlFeedback,
   FormControlLabel,
-  CheckGroup,
-  Checkbox,
-  RadioGroup,
   Radio,
-  Flex,
+  RadioGroup,
   Text,
   TextField
 } from "@sonnat/ui";
 import * as React from "react";
-import validateInputByBrowser from "utils/validateByBrowser";
-
-type Option = {
-  id: string;
-  index: number;
-  value: string;
-  label: string;
-  description?: string;
-};
+import useStyles from "./styles";
+import { validateInputByBrowser, random } from "utils";
 
 interface ChoiceBaseProps {
   className?: string;
+
   defaultValue?: string | string[];
-  required?: boolean;
+  placeholder?: string;
   multiple?: boolean;
-  max?: number;
+
+  required?: boolean;
+  maxRequired?: number;
+  minRequired?: number;
   randomized?: boolean;
-  options: Option[];
-  title: string;
-  description?: string;
-  id: string;
-  index: number;
-  allowOther?: boolean;
+  includeOther?: boolean;
   otherLabel?: string;
   otherDescription?: string;
+  options: {
+    value: string;
+    label: string;
+    description?: string;
+  }[];
+
+  id: string;
+  title: string;
+  index: number;
+  description?: string;
 }
 
 type ChoiceProps = Omit<
@@ -69,34 +71,100 @@ const reducer: Reducer = (prevState, action) => {
   }
 };
 
+const createOther = (
+  content: { otherLabel: string; otherDescription: string },
+  componentType: "checkbox" | "radio",
+  classes: Record<string, string>
+) => {
+  const component =
+    componentType === "checkbox" ? (
+      <Checkbox label={content.otherLabel} value="other" />
+    ) : (
+      <Radio label={content.otherLabel} value="other" />
+    );
+
+  return (
+    <Flex direction="column" className={classes.option}>
+      {component}
+      {!!content.otherDescription.length && (
+        <Text
+          variant="caption"
+          color="textSecondary"
+          className={classes.optionDescription}
+        >
+          {content.otherDescription}
+        </Text>
+      )}
+    </Flex>
+  );
+};
+
+const createOptions = (
+  options: ChoiceProps["options"],
+  componentType: "checkbox" | "radio",
+  classes: Record<string, string>
+) => {
+  return options.map(option => {
+    const Component =
+      componentType === "checkbox" ? (
+        <Checkbox label={option.label} value={option.value} />
+      ) : (
+        <Radio label={option.label} value={option.value} />
+      );
+
+    return (
+      <Flex direction="column" key={option.value} className={classes.option}>
+        {Component}
+        {!!option.description && (
+          <Text
+            variant="caption"
+            color="textSecondary"
+            className={classes.optionDescription}
+          >
+            {option.description}
+          </Text>
+        )}
+      </Flex>
+    );
+  });
+};
+
 const ChoiceBase = (props: ChoiceProps, ref: React.Ref<HTMLDivElement>) => {
   const {
     id,
     index,
     title,
-    description,
+    description = "",
+
     defaultValue,
-    options,
-    multiple = false,
-    max,
+
     required,
-    allowOther,
-    otherLabel,
-    otherDescription
+    options: optionsProp,
+    maxRequired,
+    minRequired,
+    randomized = false,
+    multiple = false,
+    includeOther = false,
+    otherLabel = "سایر",
+    otherDescription = "",
+
+    ...otherProps
   } = props;
-  console.log(props);
+
+  const classes = useStyles();
+
   const [state, dispatch] = React.useReducer(reducer, {
     value: defaultValue || (multiple ? [] : ""),
     error: ""
   });
 
   const handleChange = (value: string | string[]) => {
-    console.log(value);
     if (value !== state.value) {
       const error = validateInputByBrowser(
-        Array.isArray(value) ? value.join("") : value,
-        { required, maxLength: max }
+        Array.isArray(value) ? value.join(",") : value,
+        { required, maxRequired, minRequired }
       );
+
       if (!error) {
         dispatch({
           type: "SET_VALUE",
@@ -105,10 +173,29 @@ const ChoiceBase = (props: ChoiceProps, ref: React.Ref<HTMLDivElement>) => {
       }
       dispatch({
         type: "SET_ERROR",
-        error: error.replace("حرف", "تا")
+        error
       });
     }
   };
+
+  const options = React.useMemo(() => {
+    if (randomized) {
+      let availablePositions = Array(optionsProp.length) as undefined[];
+
+      return optionsProp.map(() => {
+        const r = random(0, availablePositions.length - 1);
+
+        availablePositions = [
+          ...availablePositions.slice(0, r),
+          ...availablePositions.slice(r + 1)
+        ];
+
+        return optionsProp[r];
+      });
+    }
+
+    return optionsProp;
+  }, [randomized, optionsProp]);
 
   return (
     <FormControl
@@ -118,6 +205,7 @@ const ChoiceBase = (props: ChoiceProps, ref: React.Ref<HTMLDivElement>) => {
       ref={ref}
       data-id={id}
       data-index={index}
+      {...otherProps}
     >
       <FormControlLabel>{title}</FormControlLabel>
       {!!description && (
@@ -127,64 +215,25 @@ const ChoiceBase = (props: ChoiceProps, ref: React.Ref<HTMLDivElement>) => {
         <CheckGroup
           value={state.value as string[]}
           onChange={(_, selectedValues) => void handleChange(selectedValues)}
-          style={{ gap: 16 }}
         >
-          {options.map(option => (
-            <Flex direction="column" key={option.value}>
-              <Checkbox label={option.label} value={option.value} />
-              {!!option.description && (
-                <Text
-                  variant="caption"
-                  color="textSecondary"
-                  style={{ whiteSpace: "pre-wrap", marginRight: 12 }}
-                >
-                  {option.description}
-                </Text>
-              )}
-            </Flex>
-          ))}
+          {createOptions(options, "checkbox", classes)}
+          {includeOther &&
+            createOther({ otherLabel, otherDescription }, "checkbox", classes)}
         </CheckGroup>
       ) : (
         <RadioGroup
           value={state.value as string}
           onChange={(_, selectedValue) => void handleChange(selectedValue)}
-          style={{ gap: 16 }}
         >
-          {options.map(option => (
-            <Flex direction="column" key={option.value}>
-              <Radio label={option.label} value={option.value} />
-              {!!option.description && (
-                <Text
-                  variant="caption"
-                  color="textSecondary"
-                  style={{ marginRight: 12 }}
-                >
-                  {option.description}
-                </Text>
-              )}
-            </Flex>
-          ))}
-          {allowOther && (
-            <Flex direction="column">
-              <Radio label={otherLabel || "سایر"} value="-1" />
-              {!!otherDescription && (
-                <Text
-                  variant="caption"
-                  color="textSecondary"
-                  style={{ marginRight: 12 }}
-                >
-                  {otherDescription}
-                </Text>
-              )}
-            </Flex>
-          )}
+          {createOptions(options, "radio", classes)}
+          {includeOther &&
+            createOther({ otherLabel, otherDescription }, "radio", classes)}
         </RadioGroup>
       )}
-
+      {state.value === "other" && <TextField />}
       {!!state.error && (
         <FormControlFeedback>{state.error}</FormControlFeedback>
       )}
-      {state.value === "-1" && <TextField />}
     </FormControl>
   );
 };

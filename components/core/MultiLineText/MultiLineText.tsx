@@ -6,15 +6,19 @@ import {
   TextArea
 } from "@sonnat/ui";
 import * as React from "react";
-import validateInputByBrowser from "utils/validateByBrowser";
+import validateInputByBrowser from "utils/validateInputByBrowser";
 
 interface MultiLineTextBaseProps {
   className?: string;
+
   defaultValue?: string;
-  required?: boolean;
+  placeholder?: string;
+
   pattern?: string;
   minLength?: number;
   maxLength?: number;
+  required?: boolean;
+
   title: string;
   description?: string;
   id: string;
@@ -55,10 +59,25 @@ const MultiLineTextBase = (
   props: MultiLineTextProps,
   ref: React.Ref<HTMLDivElement>
 ) => {
-  const { id, index, title, description, defaultValue, ...otherProps } = props;
+  const {
+    id,
+    index,
+    title,
+    description = "",
+
+    defaultValue = "",
+    placeholder,
+
+    required,
+    pattern,
+    minLength,
+    maxLength,
+
+    ...otherProps
+  } = props;
 
   const [state, dispatch] = React.useReducer(reducer, {
-    value: defaultValue || "",
+    value: defaultValue,
     error: ""
   });
 
@@ -66,7 +85,13 @@ const MultiLineTextBase = (
     const { value } = e.target;
 
     if (value !== state.value) {
-      const error = validateInputByBrowser(value, otherProps);
+      const error = validateInputByBrowser(value, {
+        required,
+        pattern,
+        minLength,
+        maxLength
+      });
+
       dispatch({
         type: "SET_VALUE",
         value
@@ -79,7 +104,7 @@ const MultiLineTextBase = (
   };
 
   const ids = {
-    input: `textarea-${id}-${index}`,
+    input: `field-${id}-${index}`,
     descriptor: `descriptor-${id}-${index}`
   };
 
@@ -91,9 +116,10 @@ const MultiLineTextBase = (
       ref={ref}
       data-id={id}
       data-index={index}
+      {...otherProps}
     >
       <FormControlLabel htmlFor={ids.input}>{title}</FormControlLabel>
-      {!!description && (
+      {!!description.length && (
         <FormControlDescription id={ids.descriptor}>
           {description}
         </FormControlDescription>
@@ -101,7 +127,11 @@ const MultiLineTextBase = (
       <TextArea
         onChange={handleChange}
         value={state.value}
-        inputProps={{ id: ids.input, "aria-describedby": ids.descriptor }}
+        placeholder={placeholder}
+        inputProps={{
+          id: ids.input,
+          "aria-describedby": description.length ? ids.descriptor : undefined
+        }}
         autoResize
         minRows={3}
       />

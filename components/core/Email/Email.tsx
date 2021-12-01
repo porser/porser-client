@@ -6,12 +6,16 @@ import {
   TextField
 } from "@sonnat/ui";
 import * as React from "react";
-import validateInputByBrowser from "utils/validateByBrowser";
+import validateInputByBrowser from "utils/validateInputByBrowser";
 
 interface EmailBaseProps {
   className?: string;
+
   defaultValue?: string;
+  placeholder?: string;
+
   required?: boolean;
+
   title: string;
   description?: string;
   id: string;
@@ -49,10 +53,22 @@ const reducer: Reducer = (prevState, action) => {
 };
 
 const EmailBase = (props: EmailProps, ref: React.Ref<HTMLDivElement>) => {
-  const { id, index, defaultValue, title, description, required } = props;
+  const {
+    id,
+    index,
+    title,
+    description = "",
+
+    defaultValue = "",
+    placeholder,
+
+    required,
+
+    ...otherProps
+  } = props;
 
   const [state, dispatch] = React.useReducer(reducer, {
-    value: defaultValue || "",
+    value: defaultValue,
     error: ""
   });
 
@@ -61,6 +77,7 @@ const EmailBase = (props: EmailProps, ref: React.Ref<HTMLDivElement>) => {
 
     if (value !== state.value) {
       const error = validateInputByBrowser(value, { required, type: "email" });
+
       dispatch({
         type: "SET_VALUE",
         value
@@ -85,13 +102,20 @@ const EmailBase = (props: EmailProps, ref: React.Ref<HTMLDivElement>) => {
       ref={ref}
       data-id={id}
       data-index={index}
+      {...otherProps}
     >
       <FormControlLabel htmlFor={ids.input}>{title}</FormControlLabel>
-      <FormControlDescription id={ids.descriptor}>
-        {description}
-      </FormControlDescription>
+      {!!description.length && (
+        <FormControlDescription id={ids.descriptor}>
+          {description}
+        </FormControlDescription>
+      )}
       <TextField
-        inputProps={{ id: ids.input, "aria-describedby": ids.descriptor }}
+        inputProps={{
+          id: ids.input,
+          "aria-describedby": description.length ? ids.descriptor : undefined
+        }}
+        placeholder={placeholder}
         onChange={handleChange}
         value={state.value}
         type="email"

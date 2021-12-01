@@ -6,15 +6,19 @@ import {
   TextField
 } from "@sonnat/ui";
 import * as React from "react";
-import validateInputByBrowser from "utils/validateByBrowser";
+import validateInputByBrowser from "utils/validateInputByBrowser";
 
 interface SingleLineTextBaseProps {
   className?: string;
+
   defaultValue?: string;
+  placeholder?: string;
+
   pattern?: string;
   minLength?: number;
   maxLength?: number;
   required?: boolean;
+
   title: string;
   description?: string;
   id: string;
@@ -55,10 +59,25 @@ const SingleLineTextBase = (
   props: SingleLineTextProps,
   ref: React.Ref<HTMLDivElement>
 ) => {
-  const { id, index, defaultValue, title, description, ...otherProps } = props;
+  const {
+    id,
+    index,
+    title,
+    description = "",
+
+    defaultValue = "",
+    placeholder,
+
+    required,
+    pattern,
+    minLength,
+    maxLength,
+
+    ...otherProps
+  } = props;
 
   const [state, dispatch] = React.useReducer(reducer, {
-    value: defaultValue || "",
+    value: defaultValue,
     error: ""
   });
 
@@ -66,7 +85,13 @@ const SingleLineTextBase = (
     const { value } = e.target;
 
     if (value !== state.value) {
-      const error = validateInputByBrowser(value, otherProps);
+      const error = validateInputByBrowser(value, {
+        pattern,
+        required,
+        minLength,
+        maxLength
+      });
+
       dispatch({
         type: "SET_VALUE",
         value
@@ -91,15 +116,20 @@ const SingleLineTextBase = (
       ref={ref}
       data-id={id}
       data-index={index}
+      {...otherProps}
     >
       <FormControlLabel htmlFor={ids.input}>{title}</FormControlLabel>
-      {!!description && (
+      {!!description.length && (
         <FormControlDescription id={ids.descriptor}>
           {description}
         </FormControlDescription>
       )}
       <TextField
-        inputProps={{ id: ids.input, "aria-describedby": ids.descriptor }}
+        inputProps={{
+          id: ids.input,
+          "aria-describedby": description.length ? ids.descriptor : undefined
+        }}
+        placeholder={placeholder}
         onChange={handleChange}
         value={state.value}
       />
