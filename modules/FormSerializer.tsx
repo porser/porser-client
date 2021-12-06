@@ -11,7 +11,7 @@ import {
 import { nanoid } from "nanoid";
 import type { AnyObject } from "types";
 
-interface Fields {
+export interface Fields {
   SINGLE_LINE_TEXT: {
     defaultValue?: string;
     placeholder?: string;
@@ -47,7 +47,6 @@ interface Fields {
   };
   CHOICE: {
     defaultValue?: string | string[];
-    required?: boolean;
     multiple?: boolean;
     maxRequired?: number;
     minRequired?: number;
@@ -63,21 +62,23 @@ interface Fields {
   };
 }
 
-interface Field {
+export interface Field {
   id: string;
   index: number;
   title: string;
-  description?: string;
+  description: string;
   type: keyof Fields;
   props: AnyObject;
   viewId: View["id"];
 }
 
-interface View {
+export interface View {
   id: string;
   index: number;
   title: string;
-  description?: string;
+  description: string;
+  isFinalView?: boolean;
+  isInitialView?: boolean;
   fields: Field[];
 }
 
@@ -89,7 +90,7 @@ type ReadonlyView = Readonly<View> & {
   fields: ReadonlyField[];
 };
 
-interface SerializedForm {
+export interface SerializedForm {
   readonly id: string;
   readonly title: string;
   readonly description?: string;
@@ -100,7 +101,7 @@ export default class FormSerializer {
   private id: string;
 
   private title: string;
-  private description?: string;
+  private description: string;
 
   private views: View[] = [];
 
@@ -108,7 +109,7 @@ export default class FormSerializer {
     this.id = nanoid();
 
     this.title = params.title;
-    this.description = params.description;
+    this.description = params.description || "";
   }
 
   public getId() {
@@ -127,11 +128,18 @@ export default class FormSerializer {
     return this.views;
   }
 
-  public createView(params: { title: string; description?: string }) {
+  public createView(params: {
+    title?: string;
+    description?: string;
+    isFinalView?: boolean;
+    isInitialView?: boolean;
+  }) {
     const newView: View = {
       id: nanoid(),
-      title: params.title,
-      description: params.description,
+      title: params.title || "",
+      description: params.description || "",
+      isFinalView: params.isFinalView || false,
+      isInitialView: params.isInitialView || false,
       fields: [],
       index: this.views.length
     };
@@ -149,7 +157,7 @@ export default class FormSerializer {
 
   public updateView(
     viewId: View["id"],
-    props: Partial<Omit<View, "id" | "index">>
+    props: Partial<Omit<View, "id" | "index" | "isFinalView" | "isInitialView">>
   ) {
     const view = this.getView(viewId);
 
@@ -181,12 +189,13 @@ export default class FormSerializer {
     moveItem(view.index, newIndex);
   }
 
-  public createField<T extends keyof Fields>(
-    params: Omit<Field, "id" | "index"> & {
-      type: T;
-      props: Fields[T];
-    }
-  ) {
+  public createField<T extends keyof Fields>(params: {
+    title: string;
+    description?: string;
+    type: T;
+    props: Fields[T];
+    viewId: View["id"];
+  }) {
     const view = this.getView(params.viewId);
 
     if (!view) return;
@@ -273,7 +282,7 @@ export default class FormSerializer {
   }
 
   public static deserialize(serializedForm: SerializedForm): JSX.Element {
-    const { id, title, description, views } = serializedForm;
+    const { id, views } = serializedForm;
 
     const _views = views.map(view => {
       const _fields = view.fields.map(field => {
@@ -281,6 +290,7 @@ export default class FormSerializer {
 
         const baseProps = {
           key,
+          viewId: view.id,
           id: field.id,
           index: field.index,
           title: field.title,
@@ -313,19 +323,14 @@ export default class FormSerializer {
           id={view.id}
           index={view.index}
           title={view.title}
+          isFinalView={view.isFinalView}
+          isInitialView={view.isInitialView}
           description={view.description}
           fields={_fields}
         />
       );
     });
 
-    return (
-      <FormWrapper
-        id={id}
-        title={title}
-        description={description}
-        views={_views}
-      />
-    );
+    return <FormWrapper id={id} views={_views} />;
   }
 }
