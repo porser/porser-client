@@ -7,6 +7,7 @@ import {
 } from "@sonnat/ui";
 import * as React from "react";
 import validateInputByBrowser from "utils/validateInputByBrowser";
+import useFormContext from "../FormWrapper/useContext";
 
 interface NumberBaseProps {
   className?: string;
@@ -22,6 +23,7 @@ interface NumberBaseProps {
   description?: string;
   id: string;
   index: number;
+  viewId: string;
 }
 
 type NumberProps = Omit<
@@ -59,6 +61,7 @@ const NumberBase = (props: NumberProps, ref: React.Ref<HTMLDivElement>) => {
     id,
     index,
     title,
+    viewId,
     description = "",
 
     defaultValue = 0,
@@ -70,8 +73,13 @@ const NumberBase = (props: NumberProps, ref: React.Ref<HTMLDivElement>) => {
     ...otherProps
   } = props;
 
+  const { setFieldValidity, setFieldValue, initializeField, views } =
+    useFormContext();
+
+  const viewState = views[viewId];
+
   const [state, dispatch] = React.useReducer(reducer, {
-    value: defaultValue,
+    value: (viewState?.[id].value as number) || defaultValue,
     error: ""
   });
 
@@ -84,6 +92,9 @@ const NumberBase = (props: NumberProps, ref: React.Ref<HTMLDivElement>) => {
         type: "number"
       });
 
+      setFieldValidity(viewId, { fieldId: id, isValid: !error });
+      setFieldValue(viewId, { fieldId: id, value });
+
       dispatch({
         type: "SET_VALUE",
         value
@@ -94,6 +105,22 @@ const NumberBase = (props: NumberProps, ref: React.Ref<HTMLDivElement>) => {
       });
     }
   };
+
+  React.useEffect(() => {
+    const error = validateInputByBrowser(state.value, {
+      required,
+      min,
+      max,
+      type: "number"
+    });
+
+    initializeField(viewId, {
+      isValid: !error,
+      value: state.value,
+      fieldId: id
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const ids = {
     input: `field-${id}-${index}`,
@@ -129,6 +156,6 @@ const NumberBase = (props: NumberProps, ref: React.Ref<HTMLDivElement>) => {
   );
 };
 
-const Number = React.forwardRef(NumberBase) as typeof NumberBase;
+const Number = React.memo(React.forwardRef(NumberBase)) as typeof NumberBase;
 
 export default Number;

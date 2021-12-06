@@ -1,10 +1,26 @@
 import makeStyles from "@sonnat/ui/styles/makeStyles";
 
 const useStyles = makeStyles(
-  {
-    root: {},
-    option: {},
-    optionDescription: {}
+  theme => {
+    const {
+      colors,
+      typography: { pxToRem }
+    } = theme;
+
+    return {
+      root: {},
+      option: {},
+      optionDescription: {
+        paddingRight: pxToRem(36),
+        marginBottom: pxToRem(8)
+      },
+      otherwise: {
+        border: `1px dashed ${colors.divider}`,
+        padding: pxToRem(16),
+        paddingTop: pxToRem(8),
+        borderRadius: pxToRem(4)
+      }
+    };
   },
   { name: "Choice" }
 );

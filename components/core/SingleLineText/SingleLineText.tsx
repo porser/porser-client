@@ -7,6 +7,7 @@ import {
 } from "@sonnat/ui";
 import * as React from "react";
 import validateInputByBrowser from "utils/validateInputByBrowser";
+import useFormContext from "../FormWrapper/useContext";
 
 interface SingleLineTextBaseProps {
   className?: string;
@@ -23,6 +24,7 @@ interface SingleLineTextBaseProps {
   description?: string;
   id: string;
   index: number;
+  viewId: string;
 }
 
 type SingleLineTextProps = Omit<
@@ -63,6 +65,7 @@ const SingleLineTextBase = (
     id,
     index,
     title,
+    viewId,
     description = "",
 
     defaultValue = "",
@@ -76,8 +79,13 @@ const SingleLineTextBase = (
     ...otherProps
   } = props;
 
+  const { setFieldValidity, setFieldValue, initializeField, views } =
+    useFormContext();
+
+  const viewState = views[viewId];
+
   const [state, dispatch] = React.useReducer(reducer, {
-    value: defaultValue,
+    value: (viewState?.[id].value as string) || defaultValue,
     error: ""
   });
 
@@ -86,22 +94,41 @@ const SingleLineTextBase = (
 
     if (value !== state.value) {
       const error = validateInputByBrowser(value, {
-        pattern,
         required,
+        pattern,
         minLength,
         maxLength
       });
 
-      dispatch({
-        type: "SET_VALUE",
-        value
-      });
+      setFieldValidity(viewId, { fieldId: id, isValid: !error });
+      setFieldValue(viewId, { fieldId: id, value });
+
       dispatch({
         type: "SET_ERROR",
         error
       });
+      dispatch({
+        type: "SET_VALUE",
+        value
+      });
     }
   };
+
+  React.useEffect(() => {
+    const error = validateInputByBrowser(state.value, {
+      required,
+      pattern,
+      minLength,
+      maxLength
+    });
+
+    initializeField(viewId, {
+      isValid: !error,
+      value: state.value,
+      fieldId: id
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const ids = {
     input: `field-${id}-${index}`,
@@ -140,8 +167,8 @@ const SingleLineTextBase = (
   );
 };
 
-const SingleLineText = React.forwardRef(
-  SingleLineTextBase
+const SingleLineText = React.memo(
+  React.forwardRef(SingleLineTextBase)
 ) as typeof SingleLineTextBase;
 
 export default SingleLineText;

@@ -1,4 +1,6 @@
 import { DashboardHeader } from "components/container";
+import { BYPASS_ROUTES } from "constants.app";
+import { useRouter } from "next/router";
 import * as React from "react";
 
 interface WithHeaderBaseProps {
@@ -18,9 +20,16 @@ const WithHeaderBase = (
 ) => {
   const { children, className, ...otherProps } = props;
 
+  const router = useRouter();
+
   return (
     <React.Fragment>
-      <DashboardHeader ref={ref} className={className} {...otherProps} />
+      <DashboardHeader
+        ref={ref}
+        className={className}
+        asPublicHeader={BYPASS_ROUTES.includes(router.pathname)}
+        {...otherProps}
+      />
       {children}
     </React.Fragment>
   );

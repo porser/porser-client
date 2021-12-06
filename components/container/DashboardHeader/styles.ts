@@ -17,7 +17,8 @@ const useStyles = makeStyles(
       },
       container: { display: "flex", alignItems: "center", height: pxToRem(64) },
       logo: { marginLeft: "auto", height: pxToRem(16) },
-      logoutBtn: {}
+      logoutBtn: {},
+      publicHeader: { "& $logo": { marginRight: "auto" } }
     };
   },
   { name: "DashboardHeader" }

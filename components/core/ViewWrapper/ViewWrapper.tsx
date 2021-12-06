@@ -1,27 +1,16 @@
-import { Divider, Flex, Text } from "@sonnat/ui";
+import { Text } from "@sonnat/ui";
 import c from "classnames";
 import * as React from "react";
 import { isFragment } from "react-is";
 import useStyles from "./styles";
 
-export type Action = {
-  reset: () => void;
-  getId: () => ViewWrapperBaseProps["id"];
-  getIndex: () => ViewWrapperBaseProps["index"];
-  getStates: () => unknown;
-};
-
-export type FieldAction = {
-  reset: () => void;
-  getState: () => unknown;
-};
-
-interface ViewWrapperBaseProps {
+export interface ViewWrapperBaseProps {
   className?: string;
-  action?: React.Ref<Action>;
   fields: React.ReactNode;
   id: string;
   index: number;
+  isFinalView?: boolean;
+  isInitialView?: boolean;
   title?: string;
   description?: string;
 }
@@ -41,69 +30,55 @@ const ViewWrapperBase = (
     index: indexProp,
     className,
     fields: fieldsProp,
-    action,
-    title,
-    description,
+    isFinalView = false,
+    isInitialView = false,
+    title = "",
+    description = "",
     ...otherProps
   } = props;
   const classes = useStyles();
 
-  const fieldActionRefs = React.useRef<React.Ref<FieldAction>[]>([]);
-
-  React.useImperativeHandle<Action, Action>(
-    action,
-    () => ({
-      reset: () => void 0,
-      getStates: () => {
-        fieldActionRefs.current.forEach(x => {
-          console.log(
-            x,
-            (x as React.RefObject<FieldAction>).current?.getState()
-          );
-        });
-      },
-      getId: () => id,
-      getIndex: () => indexProp
-    }),
-    [id, indexProp]
-  );
-
-  let index = 0;
   const fields = React.Children.map(fieldsProp, field => {
     if (!React.isValidElement(field)) return null;
     if (isFragment(field)) return null;
 
-    const fieldActionRef = fieldActionRefs.current[index++];
-
     return React.cloneElement(field, {
       ...(field as React.ReactElement).props,
-      action: fieldActionRef
+      className: classes.field
     });
   });
 
+  const hasTitle = title.length > 0;
+  const hasDescription = description.length > 0;
+
   return (
-    <Flex
-      direction="column"
-      mainAxisAlignment="center"
-      id={id}
+    <div
+      id={`view-${id}`}
       ref={ref}
       data-index={`${indexProp}`}
-      className={c(className, classes.root)}
+      className={c(className, classes.root, {
+        [classes.noDescription]: !hasDescription,
+        [classes.finalView]: isFinalView,
+        [classes.initialView]: isInitialView
+      })}
       {...otherProps}
     >
-      {(!!title || !!description) && (
-        <React.Fragment>
-          <Flex direction="column">
-            {!!title && <Text variant="h6">{title}</Text>}
-            {!!description && <Text variant="bodySmall">{description}</Text>}
-          </Flex>
-          <Divider spaced />
-        </React.Fragment>
+      {(hasTitle || hasDescription) && (
+        <div className={classes.heading}>
+          {hasTitle && (
+            <Text variant="h6" rootNode="h1">
+              {title}
+            </Text>
+          )}
+          {hasDescription && (
+            <Text variant="body" rootNode="p" className={classes.description}>
+              {description}
+            </Text>
+          )}
+        </div>
       )}
-      <Flex direction="column" style={{ gap: 16 }}>
-        {fields}
-      </Flex>
-    </Flex>
+      {fields}
+    </div>
   );
 };
 

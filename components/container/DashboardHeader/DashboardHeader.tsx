@@ -6,6 +6,7 @@ import { Logout } from "@sonnat/icons";
 
 interface DashboardHeaderBaseProps {
   className?: string;
+  asPublicHeader?: boolean;
 }
 
 type DashboardHeaderProps = Omit<
@@ -18,25 +19,33 @@ const DashboardHeaderBase = (
   props: DashboardHeaderProps,
   ref: React.Ref<HTMLDivElement>
 ) => {
-  const { className, ...otherProps } = props;
+  const { asPublicHeader = false, className, ...otherProps } = props;
 
   const classes = useStyles();
 
   return (
-    <header ref={ref} className={c(className, classes.root)} {...otherProps}>
+    <header
+      ref={ref}
+      className={c(className, classes.root, {
+        [classes.publicHeader]: asPublicHeader
+      })}
+      {...otherProps}
+    >
       <Container className={classes.container}>
         <img
           className={classes.logo}
           src="/static/media/porser.svg"
           alt="Branding"
         />
-        <Button
-          className={classes.logoutBtn}
-          label="خروج"
-          size="large"
-          leadingIcon={<Logout />}
-          variant="inlined"
-        />
+        {!asPublicHeader && (
+          <Button
+            className={classes.logoutBtn}
+            label="خروج"
+            size="large"
+            leadingIcon={<Logout />}
+            variant="inlined"
+          />
+        )}
       </Container>
     </header>
   );
