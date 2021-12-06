@@ -1,4 +1,5 @@
 export { default as confirmAuthentication } from "./confirmAuthentication";
+export { default as convertNumber } from "./convertNumber";
 export {
   clear as clearCookies,
   remove as removeCookie,
