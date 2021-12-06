@@ -1,7 +1,9 @@
 import { CssBaseline, PageLoader } from "@sonnat/ui";
 import { makeStyles, SonnatInitializer } from "@sonnat/ui/styles";
 import { PageSuspension } from "components/partial";
+import { BYPASS_ROUTES, PUBLIC_ROUTES } from "constants.app";
 import Head from "next/head";
+import type { ParsedUrlQuery } from "querystring";
 import * as React from "react";
 import smoothScroll from "smoothscroll-polyfill";
 import { useAuthState, usePageState } from "store";
@@ -34,14 +36,11 @@ const useGlobalStyles = makeStyles(
   { name: "GlobalStyles" }
 );
 
-const PUBLIC_ROUTES = [
-  "/",
-  "/login",
-  "/signup",
-  "/forgot-password",
-  "/reset-password",
-  "/verify-account"
-];
+const constructCanonicalPath = (pathname: string, queries: ParsedUrlQuery) => {
+  const id = queries.id as string | undefined;
+
+  return pathname.replace("/[id]", id ? `/${id}` : "");
+};
 
 const App = (props: AppPropsWithLayout): React.ReactNode => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -95,7 +94,9 @@ const App = (props: AppPropsWithLayout): React.ReactNode => {
   const is500 = is500Page(Page as unknown as Custom500Page);
 
   const shouldProtect =
-    !(is404 || is500) && !PUBLIC_ROUTES.includes(router.pathname);
+    !(is404 || is500) &&
+    !PUBLIC_ROUTES.includes(router.pathname) &&
+    !BYPASS_ROUTES.includes(router.pathname);
 
   const { authenticating, error, authenticationError, ...otherErrors } =
     useConfirmAuthentication(shouldProtect);
@@ -107,6 +108,8 @@ const App = (props: AppPropsWithLayout): React.ReactNode => {
   React.useEffect(() => {
     if (authenticationError) void router.replace("/login");
   }, [authenticationError, router]);
+
+  const canonicalPath = constructCanonicalPath(router.pathname, router.query);
 
   return (
     <SonnatInitializer theme={theme} injectFirst>
@@ -131,7 +134,7 @@ const App = (props: AppPropsWithLayout): React.ReactNode => {
         {setDescriptionMeta(
           "پُرسِر پلتفرمی آنلاین برای ساخت انواع فرم، آزمون و نظرسنجی می‌باشد."
         )}
-        {setCanonicalMeta(`https://porser.io${router.pathname}`)}
+        {setCanonicalMeta(`https://porser.io${canonicalPath}`)}
         <meta
           name="viewport"
           content="initial-scale=1.0, width=device-width, maximum-scale=5.0, minimum-scale=1.0"

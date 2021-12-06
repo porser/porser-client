@@ -1,15 +1,15 @@
 import env from "utils/env";
 
-export const isProduction = env("NODE_ENV", "development") === "production";
+export const PRODUCTION_ENV = env("NODE_ENV", "development") === "production";
 
 export const ACCESS_TOKEN_COOKIE_KEY = "porser-access-token";
 export const REFRESH_TOKEN_COOKIE_KEY = "porser-refresh-token";
 
-const _DEV_API_URL_ = "http://localhost:3030";
+const DEV_API_URL = "http://localhost:3030";
 
-export const API_URL = isProduction
-  ? env("NEXT_PUBLIC_API_URL", _DEV_API_URL_)
-  : _DEV_API_URL_;
+export const API_URL = PRODUCTION_ENV
+  ? env("NEXT_PUBLIC_API_URL", DEV_API_URL)
+  : DEV_API_URL;
 
 export const SERVER_ERROR = [
   "مشکلی در سرور بوجود آمده است.",
@@ -31,3 +31,14 @@ export const USER_NOT_VERIFIED = [
 
 export const INVALID_LINK_ERROR =
   "لینک معتبر نمی‌باشد؛ ممکن است منقضی شده باشد.";
+
+export const PUBLIC_ROUTES = [
+  "/",
+  "/login",
+  "/signup",
+  "/forgot-password",
+  "/reset-password",
+  "/verify-account"
+];
+
+export const BYPASS_ROUTES = ["/form/[id]"];
