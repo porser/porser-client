@@ -1,21 +1,11 @@
 import makeStyles from "@sonnat/ui/styles/makeStyles";
-import { nanoid } from "nanoid";
+import { WithHeader } from "components/layout";
+import FormSerializer, { SerializedForm } from "modules/FormSerializer";
 import type { GetServerSideProps } from "next";
 import Head from "next/head";
 import * as React from "react";
 import type { Layout, NextPageWithLayout } from "types";
 import { setTitleMeta } from "utils";
-import {
-  ChoiceField,
-  deserialize,
-  Form,
-  MultiLineTextField,
-  Serialize,
-  SingleLineTextField,
-  NumberField,
-  View,
-  URLField
-} from "utils/serialization";
 
 const useStyles = makeStyles(
   {
@@ -25,14 +15,13 @@ const useStyles = makeStyles(
 );
 
 interface PageProps {
-  data: Serialize;
+  data: SerializedForm;
 }
 
-const Page: NextPageWithLayout<PageProps> = props => {
-  const { data } = props;
+const Page: NextPageWithLayout<PageProps> = ({ data }) => {
   const classes = useStyles();
 
-  const form = React.useMemo(() => deserialize(data), [data]);
+  const form = React.useMemo(() => FormSerializer.deserialize(data), [data]);
 
   return (
     <React.Fragment>
@@ -42,154 +31,127 @@ const Page: NextPageWithLayout<PageProps> = props => {
   );
 };
 
-const PageLayout: Layout = page => <React.Fragment>{page}</React.Fragment>;
-
 export const getServerSideProps: GetServerSideProps<PageProps> = async () => {
   await Promise.resolve();
 
-  const form = new Form();
+  const form = new FormSerializer({
+    title: "فرم هکتون",
+    description: "فرمی که برای تست و ارائه پروژه در هکتون ایجاد شد."
+  });
 
-  const view = new View(form, {
+  form.createView({
+    title: "سلام بچه‌ها",
+    isInitialView: true,
+    description:
+      "خیلی خوشحالیم که ما این سه روز رو کنار شما گذروندیم. ایده ما درست کردن یه فرم‌ساز بود که محدودیت و مشکلاتمون رو با فرم‌سازهای قبلی حل کرد.\nحالا می‌خواهیم اولین فرمی که ساختیم رو با شما تست کنیم!"
+  });
+
+  form.createView({
     title: "گروه سؤال",
     description:
       "یکی از مشکلاتی که فرم‌سازای دیگه دارن (منظورمونم پرسلاین نیست!) این بود که نمی‌تونستیم چند‌تا سوال که به هم مرتبطن رو با هم نشون بدیم. اما اینجا می‌شه! حالا بهمون اطلاعات تیمتونو بگین که یه شام هکتون مهمونتون کنیم."
   });
-  form.createView(view);
 
-  const view1 = new View(form, {
+  form.createView({
     title: "تک‌ انتخابی",
     description:
       "یکی دیگه از دردسرامون با فرم‌سازای دیگه،‌ نداشتن گزینه‌ی سایر و هیچ‌کدام و ... بود. که ما اینو با یه اشاره حلش کردیم *ـ*"
   });
-  form.createView(view1);
 
-  const view2 = new View(form, {
-    title: "چندگزینه‌ای‌ها",
-    description: ""
+  form.createView({ title: "چندگزینه‌ای‌ها" });
+
+  form.createView({
+    title: "ممنونیم که فرم رو پر کردید!",
+    isFinalView: true
   });
-  form.createView(view2);
 
-  const field1 = new SingleLineTextField(view, {
+  form.createField({
+    type: "SINGLE_LINE_TEXT",
     title: "اسم تیمت چیه؟",
     description:
       "فیلد متنیِ پرسر می‌تونه ورودی‌های مختلف رو اعتبارسنجی کنه! یعنی شما عدد، متن، لینک و ... بده بهش، اون خودش می‌فهمه چی به چیه!",
-    props: { defaultValue: "" }
-  });
-  const field2 = new NumberField(view, {
-    title: "چند نفرین",
-    description: "",
-    props: { defaultValue: 0 }
-  });
-  const field3 = new URLField(view, {
-    title: "لینک محصولتونو بهمون بدین.",
-    description: "",
-    props: { defaultValue: "" }
+    viewId: form.getViews()[1].id,
+    props: { required: true }
   });
 
-  const field4 = new ChoiceField(view1, {
+  form.createField({
+    type: "NUMBER",
+    title: "چند نفرین",
+    viewId: form.getViews()[1].id,
+    props: {}
+  });
+
+  form.createField({
+    type: "URL",
+    title: "لینک محصولتونو بهمون بدین.",
+    viewId: form.getViews()[1].id,
+    props: { placeholder: "http://example.com" }
+  });
+
+  form.createField({
+    type: "CHOICE",
     title: "سایز هودیت چیه؟",
     description:
       "برای انتخاب درست تر سایزت،‌ هر گزینه یه توضیح هم داره که خب تو پرسلاین نمی‌شد همچین چیزیو داشته باشیم!",
+    viewId: form.getViews()[2].id,
     props: {
-      allowOther: true,
+      includeOther: true,
       otherDescription:
         "اینجام میتونی بهمون عرض سرشونه و قدتو بگی ما خودمون سایزتو در بیاریم.",
       options: [
+        { label: "Small", description: "این واسه باربیاس", value: "small" },
         {
-          id: nanoid(),
-          index: 0,
-          label: "Small",
-          description: "این واسه باربیاس",
-          value: "small"
-        },
-        {
-          id: nanoid(),
-          index: 0,
           label: "Medium",
           description:
             "این واسه اونایی که دلشون می‌خواد باربی باشن ولی پنیر پیتزا دوست دارن.",
           value: "medium"
         },
         {
-          id: nanoid(),
-          index: 0,
           label: "Large",
           description: "این واسه مشتیاس که با خودشون روراستن..",
           value: "large"
         },
         {
-          id: nanoid(),
-          index: 0,
           label: "X Large",
           description: "این واسه اوناس که همه‌چیو گشاد میپوشن.",
           value: "xlarge"
         },
         {
-          id: nanoid(),
-          index: 0,
           label: "2X Large",
           description: "اینم واسه تپلای مهربونه :))",
-          value: "2xlarge"
+          value: "xxlarge"
         }
       ]
     }
   });
-  const field5 = new ChoiceField(view2, {
+
+  form.createField({
+    type: "CHOICE",
     title: "رای شما کدوم تیماست؟",
     description:
       "می‌دونیم که فقط می‌تونیم به ۵ تا تیم رای بدیم. ما روی گزینه‌ها می‌تونیم محدودیت انتخاب بذاریم. حالا رای خودتونو بدین!",
+    viewId: form.getViews()[3].id,
     props: {
       multiple: true,
-      max: 5,
+      maxRequired: 5,
+      minRequired: 5,
+      includeOther: true,
       options: [
-        {
-          id: nanoid(),
-          index: 0,
-          label: "پرسر",
-          value: "a"
-        },
-        {
-          id: nanoid(),
-          index: 0,
-          label: "Porser",
-          value: "b"
-        },
-        {
-          id: nanoid(),
-          index: 0,
-          label: "پرسرِ خالی",
-          value: "c"
-        },
-        {
-          id: nanoid(),
-          index: 0,
-          label: "پرسرِ پلاستیکی",
-          value: "d"
-        },
-        {
-          id: nanoid(),
-          index: 0,
-          label: "Porser Plus",
-          value: "e"
-        },
-        {
-          id: nanoid(),
-          index: 0,
-          label: "Porser Pro",
-          value: "f"
-        }
+        { label: "پُرسِر", value: "a" },
+        { label: "Porser", value: "b" },
+        { label: "PORSER", value: "c" },
+        { label: "porser", value: "d" },
+        { label: "pors-er", value: "e" },
+        { label: "por-ser", value: "f" }
       ]
     }
   });
 
-  form.createField(field1);
-  form.createField(field2);
-  form.createField(field3);
-  form.createField(field4);
-  form.createField(field5);
-
-  return { props: { data: form.getSerializedVersion() } };
+  return { props: { data: form.serialize() } };
 };
+
+const PageLayout: Layout = page => <WithHeader>{page}</WithHeader>;
+
 Page.getLayout = () => PageLayout;
 
 export default Page;
