@@ -5,6 +5,7 @@ export type ValidityOptions = {
   minLength?: number;
   minRequired?: number;
   maxRequired?: number;
+  exactRequired?: number;
   maxLength?: number;
   required?: boolean;
   type?: string;
@@ -30,6 +31,7 @@ const validateInputByBrowser = (
     maxLength,
     minRequired,
     maxRequired,
+    exactRequired,
     required = false,
     type = "text"
   } = options;
@@ -49,6 +51,9 @@ const validateInputByBrowser = (
     moreSelected: `حداکثر ${numberToLocaleString(
       maxRequired
     )} گزینه باید انتخاب شود`,
+    selectMismatch: `${numberToLocaleString(
+      exactRequired
+    )} گزینه باید انتخاب شود`,
     valueMissing: "پرکردن این قسمت اجباری است"
   };
 
@@ -61,6 +66,13 @@ const validateInputByBrowser = (
   if (!isUndefined(max)) input.max = String(max);
   if (!isUndefined(min)) input.min = String(min);
   if (!isUndefined(required)) input.required = required;
+
+  if (
+    !isUndefined(exactRequired) &&
+    exactRequired >= 1 &&
+    String(value).split(",").length !== exactRequired
+  )
+    return messages.selectMismatch;
 
   if (
     !isUndefined(minRequired) &&
