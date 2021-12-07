@@ -1,11 +1,9 @@
+import { Tab, TabBar } from "@sonnat/ui";
 import c from "classnames";
+import { Context as FormBuilderContext } from "pages/form/build/[projectId]";
 import * as React from "react";
-import { TabBar, Tab } from "@sonnat/ui";
+import { FieldsTab, SettingsTab, ViewsTab } from "./partials";
 import useStyles from "./styles";
-import FormSettingsTab from "./FormSettingsTab";
-import ViewsTab from "./ViewsTab";
-import FieldsTab from "./FieldsTab";
-import FormBuilderContext from "components/layout/FormBuilderLayout/Context";
 
 interface ControlsPanelBaseProps {
   className?: string;
@@ -24,12 +22,10 @@ const ControlsPanelBase = (
   const { className, ...otherProps } = props;
 
   const classes = useStyles();
-
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const context = React.useContext(FormBuilderContext)!;
+  const { activeTab, setActiveTab } = React.useContext(FormBuilderContext);
 
   const handleTabChange = (identifier: number) => {
-    context.setActiveTab(identifier);
+    setActiveTab(identifier);
   };
 
   return (
@@ -42,18 +38,26 @@ const ControlsPanelBase = (
       <TabBar
         className={classes.tabs}
         variant="fluid"
-        activeTab={context.activeTab}
+        activeTab={activeTab}
         onChange={(_, identifier) => void handleTabChange(identifier as number)}
       >
-        <Tab label="تنظیمات عمومی" />
-        <Tab label="نمایش فرم" />
+        <Tab label="تنظیمات" />
+        <Tab label="گروه سؤالات" />
         <Tab label="سؤالات" />
       </TabBar>
       <div className={classes.container}>
-        {context.activeTab === 0 && <FormSettingsTab />}
-        {context.activeTab === 1 && <ViewsTab />}
-        {context.activeTab === 2 && <FieldsTab />}
+        {activeTab === 0 && <SettingsTab />}
+        {activeTab === 1 && <ViewsTab />}
+        {activeTab === 2 && <FieldsTab />}
       </div>
+      {/* <div className={classes.actionBar}>
+        <Button
+          label="ذخیره‌سازی"
+          color="primary"
+          disabled
+          className={classes.primaryActionBtn}
+        />
+      </div> */}
     </aside>
   );
 };
