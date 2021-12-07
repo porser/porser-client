@@ -38,8 +38,12 @@ const useGlobalStyles = makeStyles(
 
 const constructCanonicalPath = (pathname: string, queries: ParsedUrlQuery) => {
   const id = queries.id as string | undefined;
+  const pid = queries.projectId as string | undefined;
 
-  return pathname.replace("/[id]", id ? `/${id}` : "");
+  if (id) pathname = pathname.replace("[id]", id);
+  if (pid) pathname = pathname.replace("[projectId]", pid);
+
+  return pathname;
 };
 
 const App = (props: AppPropsWithLayout): React.ReactNode => {
