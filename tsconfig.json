@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
+    "pretty": true,
     "allowJs": true,
-    "alwaysStrict": true,
     "strictNullChecks": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
@@ -13,6 +13,8 @@
     "moduleResolution": "node",
     "noEmit": true,
     "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noImplicitOverride": true,
     "noUnusedLocals": true,
     "noImplicitAny": true,
     "noUnusedParameters": true,
@@ -20,7 +22,8 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "esnext",
-    "types": ["node", "react"]
+    "types": ["node", "react"],
+    "incremental": true
   },
   "exclude": ["node_modules", "out", ".next"],
   "include": ["**/*.ts", "**/*.tsx"]
