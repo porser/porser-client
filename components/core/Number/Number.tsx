@@ -144,7 +144,7 @@ const NumberBase = (props: NumberProps, ref: React.Ref<HTMLDivElement>) => {
         </FormControlDescription>
       )}
       <InputStepper
-        onChange={(_, num) => handleChange(num)}
+        onChange={value => handleChange(value)}
         value={state.value}
         min={min}
         max={max}

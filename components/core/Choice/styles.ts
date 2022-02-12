@@ -15,7 +15,7 @@ const useStyles = makeStyles(
         marginBottom: pxToRem(8)
       },
       otherwise: {
-        border: `1px dashed ${colors.divider}`,
+        border: `1px dashed ${colors.divider.dark}`,
         padding: pxToRem(16),
         paddingTop: pxToRem(8),
         borderRadius: pxToRem(4)

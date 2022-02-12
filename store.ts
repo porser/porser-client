@@ -1,5 +1,5 @@
 import type { User } from "types";
-import createStore, { State } from "zustand";
+import createStore, { type State } from "zustand";
 import { persist } from "zustand/middleware";
 
 interface PageState extends State {
@@ -12,12 +12,9 @@ interface AuthState extends State {
   setUser: (user: User | null) => void;
 }
 
-export const useAuthState = createStore<AuthState>(
-  persist(
-    set => ({
-      user: null,
-      setUser: user => set(() => ({ user }))
-    }),
+export const useAuthState = createStore(
+  persist<AuthState>(
+    set => ({ user: null, setUser: user => set(() => ({ user })) }),
     {
       name: "porser-auth-state",
       partialize: state => ({ user: state.user })

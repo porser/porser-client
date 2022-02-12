@@ -59,10 +59,10 @@ const Page: NextPageWithLayout<Props> = props => {
       <Head>{setTitleMeta("PORSER | تأیید حساب کاربری")}</Head>
       <section className={classes.root}>
         <div className={classes.result}>
-          <Text variant="h6" rootNode="h1" className={classes.title}>
+          <Text variant="h6" as="h1" className={classes.title}>
             حساب کاربری شما با موفقیت تأیید شد
           </Text>
-          <Text variant="bodySmall" rootNode="p" color="textSecondary">
+          <Text variant="bodySmall" as="p" color="textSecondary">
             شما می‌توانید از تمامی امکانات <strong>پُرسِر</strong> استفاده کنید.
           </Text>
         </div>

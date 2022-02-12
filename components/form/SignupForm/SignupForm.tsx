@@ -204,9 +204,7 @@ const SignupFormBase = (
     }
   };
 
-  const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value, name } = e.target;
-
+  const handleTextChange = (value: string, name: string) => {
     if (value !== inputs[name as keyof State].value) {
       dispatch({
         type: "SET_VALIDITY",
@@ -237,10 +235,10 @@ const SignupFormBase = (
     <div className={c(className, classes.root)} ref={ref} {...otherProps}>
       <form className={classes.form} onSubmit={e => void submit(e)}>
         {globalError && <div className={classes.formError}>{globalError}</div>}
-        <Text variant="h6" rootNode="h1" className={classes.title}>
+        <Text variant="h6" as="h1" className={classes.title}>
           به پُرسِر خوش‌آمدید!
         </Text>
-        <Text variant="bodySmall" rootNode="p" color="textSecondary">
+        <Text variant="bodySmall" as="p" color="textSecondary">
           برای ثبت‌نام، ایمیل و رمز عبور خود را وارد کنید:
         </Text>
         <FormControl
@@ -254,7 +252,7 @@ const SignupFormBase = (
             name="email"
             size="large"
             value={inputs.email.value}
-            onChange={handleTextChange}
+            onChange={value => void handleTextChange(value, "email")}
           />
           {inputs.email.error && (
             <FormControlFeedback>{inputs.email.error}</FormControlFeedback>
@@ -272,7 +270,7 @@ const SignupFormBase = (
             name="password"
             size="large"
             value={inputs.password.value}
-            onChange={handleTextChange}
+            onChange={value => void handleTextChange(value, "password")}
             trailingAdornment={
               <InputAdornment
                 variant="icon"
@@ -297,7 +295,7 @@ const SignupFormBase = (
         />
         <Text
           variant="bodySmall"
-          rootNode="p"
+          as="p"
           color="textSecondary"
           className={classes.footer}
         >
@@ -316,7 +314,7 @@ const SignupFormBase = (
         <div className={classes.copyrightDivider}></div>
         <Text
           variant="caption"
-          rootNode="p"
+          as="p"
           color="textHint"
           className={classes.copyrightText}
         >

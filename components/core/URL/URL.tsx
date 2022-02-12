@@ -77,9 +77,7 @@ const URLBase = (props: URLProps, ref: React.Ref<HTMLDivElement>) => {
     error: ""
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-
+  const handleChange = (value: string) => {
     if (value !== state.value) {
       const error = validateInputByBrowser(value, { required, type: "url" });
 

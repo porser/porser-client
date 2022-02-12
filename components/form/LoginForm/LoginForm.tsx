@@ -190,9 +190,7 @@ const LoginFormBase = (
     }
   };
 
-  const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value, name } = e.target;
-
+  const handleTextChange = (value: string, name: string) => {
     if (value !== inputs[name as keyof State].value) {
       dispatch({
         type: "SET_VALIDITY",
@@ -223,10 +221,10 @@ const LoginFormBase = (
     <div className={c(className, classes.root)} ref={ref} {...otherProps}>
       <form className={classes.form} onSubmit={e => void submit(e)}>
         {globalError && <div className={classes.formError}>{globalError}</div>}
-        <Text variant="h6" rootNode="h1" className={classes.title}>
+        <Text variant="h6" as="h1" className={classes.title}>
           ورود
         </Text>
-        <Text variant="bodySmall" rootNode="p" color="textSecondary">
+        <Text variant="bodySmall" as="p" color="textSecondary">
           برای ورود، ایمیل و رمز عبور خود را وارد کنید:
         </Text>
         <FormControl
@@ -240,7 +238,7 @@ const LoginFormBase = (
             name="email"
             size="large"
             value={inputs.email.value}
-            onChange={handleTextChange}
+            onChange={value => void handleTextChange(value, "email")}
           />
           {inputs.email.error && (
             <FormControlFeedback>{inputs.email.error}</FormControlFeedback>
@@ -258,7 +256,7 @@ const LoginFormBase = (
             name="password"
             size="large"
             value={inputs.password.value}
-            onChange={handleTextChange}
+            onChange={value => void handleTextChange(value, "password")}
             trailingAdornment={
               <InputAdornment
                 variant="icon"
@@ -283,7 +281,7 @@ const LoginFormBase = (
         />
         <Text
           variant="bodySmall"
-          rootNode="p"
+          as="p"
           color="textSecondary"
           className={classes.footer}
         >
@@ -293,7 +291,7 @@ const LoginFormBase = (
         </Text>
         <Text
           variant="bodySmall"
-          rootNode="p"
+          as="p"
           color="textSecondary"
           className={classes.footer}
         >
@@ -312,7 +310,7 @@ const LoginFormBase = (
         <div className={classes.copyrightDivider}></div>
         <Text
           variant="caption"
-          rootNode="p"
+          as="p"
           color="textHint"
           className={classes.copyrightText}
         >

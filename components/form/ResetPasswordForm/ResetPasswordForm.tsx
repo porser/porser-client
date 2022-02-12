@@ -159,9 +159,7 @@ const ResetPasswordFormBase = (
     }
   };
 
-  const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value, name } = e.target;
-
+  const handleTextChange = (value: string, name: string) => {
     if (value !== inputs[name as keyof State].value) {
       dispatch({
         type: "SET_VALIDITY",
@@ -195,15 +193,15 @@ const ResetPasswordFormBase = (
           className={c(classes.form, "success")}
           onSubmit={e => void submit(e)}
         >
-          <Text variant="h6" rootNode="h1" className={classes.title}>
+          <Text variant="h6" as="h1" className={classes.title}>
             رمز عبور شما با موفقیت بازنشانی شد!
           </Text>
-          <Text variant="bodySmall" rootNode="p" color="textSecondary">
+          <Text variant="bodySmall" as="p" color="textSecondary">
             {successMessage}
           </Text>
           <Text
             variant="bodySmall"
-            rootNode="p"
+            as="p"
             color="textSecondary"
             className={classes.footer}
           >
@@ -221,7 +219,7 @@ const ResetPasswordFormBase = (
           <div className={classes.copyrightDivider}></div>
           <Text
             variant="caption"
-            rootNode="p"
+            as="p"
             color="textHint"
             className={classes.copyrightText}
           >
@@ -237,10 +235,10 @@ const ResetPasswordFormBase = (
     <div className={c(className, classes.root)} ref={ref} {...otherProps}>
       <form className={classes.form} onSubmit={e => void submit(e)}>
         {globalError && <div className={classes.formError}>{globalError}</div>}
-        <Text variant="h6" rootNode="h1" className={classes.title}>
+        <Text variant="h6" as="h1" className={classes.title}>
           بازنشانی رمز عبور
         </Text>
-        <Text variant="bodySmall" rootNode="p" color="textSecondary">
+        <Text variant="bodySmall" as="p" color="textSecondary">
           برای بازنشانی، رمز عبور جدید خود را وارد کنید:
         </Text>
         <FormControl
@@ -255,7 +253,7 @@ const ResetPasswordFormBase = (
             name="password"
             size="large"
             value={inputs.password.value}
-            onChange={handleTextChange}
+            onChange={value => void handleTextChange(value, "password")}
             trailingAdornment={
               <InputAdornment
                 variant="icon"
@@ -288,7 +286,7 @@ const ResetPasswordFormBase = (
         <div className={classes.copyrightDivider}></div>
         <Text
           variant="caption"
-          rootNode="p"
+          as="p"
           color="textHint"
           className={classes.copyrightText}
         >

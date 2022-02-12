@@ -66,12 +66,12 @@ const ViewWrapperBase = (
       {(hasTitle || hasDescription) && (
         <div className={classes.heading}>
           {hasTitle && (
-            <Text variant="h6" rootNode="h1">
+            <Text variant="h6" as="h1">
               {title}
             </Text>
           )}
           {hasDescription && (
-            <Text variant="body" rootNode="p" className={classes.description}>
+            <Text variant="body" as="p" className={classes.description}>
               {description}
             </Text>
           )}

@@ -15,7 +15,7 @@ const prefixer = PostCss([AutoPrefixer]);
 const cleaner = new CleanCss();
 
 export default class MyDocument extends Document {
-  static async getInitialProps(ctx: DocumentContext) {
+  static override async getInitialProps(ctx: DocumentContext) {
     const sheets = new ServerStyleSheets();
 
     const originalRenderPage = ctx.renderPage;
@@ -51,7 +51,7 @@ export default class MyDocument extends Document {
     };
   }
 
-  render(): JSX.Element {
+  override render(): JSX.Element {
     return (
       <Html lang="en-US">
         <Head>

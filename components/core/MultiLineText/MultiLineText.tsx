@@ -89,9 +89,7 @@ const MultiLineTextBase = (
     error: ""
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const { value } = e.target;
-
+  const handleChange = (value: string) => {
     if (value !== state.value) {
       const error = validateInputByBrowser(value, {
         required,

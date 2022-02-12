@@ -155,9 +155,7 @@ const ForgotPasswordFormBase = (
     }
   };
 
-  const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value, name } = e.target;
-
+  const handleTextChange = (value: string, name: string) => {
     if (value !== inputs[name as keyof State].value) {
       dispatch({
         type: "SET_VALIDITY",
@@ -186,15 +184,15 @@ const ForgotPasswordFormBase = (
           className={c(classes.form, "success")}
           onSubmit={e => void submit(e)}
         >
-          <Text variant="h6" rootNode="h1" className={classes.title}>
+          <Text variant="h6" as="h1" className={classes.title}>
             ایمیل بازیابی ارسال شد!
           </Text>
-          <Text variant="bodySmall" rootNode="p" color="textSecondary">
+          <Text variant="bodySmall" as="p" color="textSecondary">
             {successMessage}
           </Text>
           <Text
             variant="bodySmall"
-            rootNode="p"
+            as="p"
             color="textSecondary"
             className={classes.footer}
           >
@@ -212,7 +210,7 @@ const ForgotPasswordFormBase = (
           <div className={classes.copyrightDivider}></div>
           <Text
             variant="caption"
-            rootNode="p"
+            as="p"
             color="textHint"
             className={classes.copyrightText}
           >
@@ -228,10 +226,10 @@ const ForgotPasswordFormBase = (
     <div className={c(className, classes.root)} ref={ref} {...otherProps}>
       <form className={classes.form} onSubmit={e => void submit(e)}>
         {globalError && <div className={classes.formError}>{globalError}</div>}
-        <Text variant="h6" rootNode="h1" className={classes.title}>
+        <Text variant="h6" as="h1" className={classes.title}>
           بازیابی رمز عبور
         </Text>
-        <Text variant="bodySmall" rootNode="p" color="textSecondary">
+        <Text variant="bodySmall" as="p" color="textSecondary">
           ایمیل خود را جهت بازیابی رمز عبور وارد کنید:
         </Text>
         <FormControl
@@ -245,7 +243,7 @@ const ForgotPasswordFormBase = (
             name="email"
             size="large"
             value={inputs.email.value}
-            onChange={handleTextChange}
+            onChange={value => void handleTextChange(value, "email")}
           />
           {inputs.email.error && (
             <FormControlFeedback>{inputs.email.error}</FormControlFeedback>
@@ -262,7 +260,7 @@ const ForgotPasswordFormBase = (
         />
         <Text
           variant="bodySmall"
-          rootNode="p"
+          as="p"
           color="textSecondary"
           className={classes.footer}
         >
@@ -281,7 +279,7 @@ const ForgotPasswordFormBase = (
         <div className={classes.copyrightDivider}></div>
         <Text
           variant="caption"
-          rootNode="p"
+          as="p"
           color="textHint"
           className={classes.copyrightText}
         >

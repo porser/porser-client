@@ -275,7 +275,7 @@ const ChoiceBase = (props: ChoiceProps, ref: React.Ref<HTMLDivElement>) => {
         {multiple ? (
           <CheckGroup
             value={state.value as string[]}
-            onChange={(_, selectedValues) => void handleChange(selectedValues)}
+            onChange={selectedValues => void handleChange(selectedValues)}
           >
             {createOptions(options, "checkbox", classes)}
             {includeOther &&
@@ -288,7 +288,7 @@ const ChoiceBase = (props: ChoiceProps, ref: React.Ref<HTMLDivElement>) => {
         ) : (
           <RadioGroup
             value={state.value as string}
-            onChange={(_, selectedValue) => void handleChange(selectedValue)}
+            onChange={selectedValue => void handleChange(selectedValue)}
           >
             {createOptions(options, "radio", classes)}
             {includeOther &&
@@ -313,7 +313,7 @@ const ChoiceBase = (props: ChoiceProps, ref: React.Ref<HTMLDivElement>) => {
               id: `field-${id}-${index}`,
               "aria-describedby": `descriptor-${id}-${index}`
             }}
-            onChange={e => void handleOtherwise(e.target.value)}
+            onChange={value => void handleOtherwise(value)}
           />
         </FormControl>
       )}

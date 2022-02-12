@@ -69,7 +69,7 @@ const useStyles = makeStyles(
         flexDirection: "row-reverse",
         alignItems: "center",
         height: pxToRem(8),
-        backgroundColor: colors.divider,
+        backgroundColor: colors.divider.dark,
         borderRadius: pxToRem(8),
         [breakpoints.down("sm")]: { width: "100%" },
         "& > div": {
