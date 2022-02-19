@@ -1,12 +1,13 @@
 import * as React from "react";
 import c from "classnames";
 import useStyles from "./styles";
-import { Button, Container } from "@sonnat/ui";
+import { Button, Container, Flex, FlexItem } from "@sonnat/ui";
 import { Logout } from "@sonnat/icons";
 
 interface DashboardHeaderBaseProps {
   className?: string;
   asPublicHeader?: boolean;
+  subHeader?: JSX.Element;
 }
 
 type DashboardHeaderProps = Omit<
@@ -19,7 +20,7 @@ const DashboardHeaderBase = (
   props: DashboardHeaderProps,
   ref: React.Ref<HTMLDivElement>
 ) => {
-  const { asPublicHeader = false, className, ...otherProps } = props;
+  const { asPublicHeader = false, subHeader, className, ...otherProps } = props;
 
   const classes = useStyles();
 
@@ -31,21 +32,28 @@ const DashboardHeaderBase = (
       })}
       {...otherProps}
     >
-      <Container className={classes.container}>
-        <img
-          className={classes.logo}
-          src="/static/media/porser.svg"
-          alt="Branding"
-        />
-        {!asPublicHeader && (
-          <Button
-            className={classes.logoutBtn}
-            label="خروج"
-            size="large"
-            leadingIcon={<Logout />}
-            variant="inlined"
-          />
-        )}
+      <Container fluid>
+        <Flex direction="column" crossAxisAlignment="center">
+          <FlexItem className={classes.main}>
+            <img
+              className={classes.logo}
+              src="/static/media/porser.svg"
+              alt="Branding"
+            />
+            {!asPublicHeader && (
+              <Button
+                className={classes.logoutBtn}
+                label="خروج"
+                size="large"
+                leadingIcon={<Logout />}
+                variant="inlined"
+              />
+            )}
+          </FlexItem>
+          {subHeader && (
+            <FlexItem className={classes.sub}>{subHeader}</FlexItem>
+          )}
+        </Flex>
       </Container>
     </header>
   );

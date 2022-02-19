@@ -6,6 +6,7 @@ import * as React from "react";
 interface WithHeaderBaseProps {
   className?: string;
   children: React.ReactNode;
+  subHeader?: JSX.Element;
 }
 
 type WithHeaderProps = Omit<
@@ -18,7 +19,7 @@ const WithHeaderBase = (
   props: WithHeaderProps,
   ref: React.Ref<HTMLDivElement>
 ) => {
-  const { children, className, ...otherProps } = props;
+  const { children, subHeader, className, ...otherProps } = props;
 
   const router = useRouter();
 
@@ -27,6 +28,7 @@ const WithHeaderBase = (
       <DashboardHeader
         ref={ref}
         className={className}
+        subHeader={subHeader}
         asPublicHeader={BYPASS_ROUTES.includes(router.pathname)}
         {...otherProps}
       />
