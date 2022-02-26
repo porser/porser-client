@@ -1,12 +1,12 @@
 import makeStyles from "@sonnat/ui/styles/makeStyles";
 import Head from "next/head";
 import * as React from "react";
-import type { Layout, NextPageWithLayout } from "types";
+import type { PageLayout, PorserNextPage } from "types";
 import { setTitleMeta } from "utils";
 
 const useStyles = makeStyles({ root: {} }, { name: "Page" });
 
-const Page: NextPageWithLayout = () => {
+const Page: PorserNextPage = () => {
   const classes = useStyles();
 
   return (
@@ -17,8 +17,8 @@ const Page: NextPageWithLayout = () => {
   );
 };
 
-const PageLayout: Layout = page => <React.Fragment>{page}</React.Fragment>;
+const Layout: PageLayout = page => <React.Fragment>{page}</React.Fragment>;
 
-Page.getLayout = () => PageLayout;
+Page.getLayout = () => Layout;
 
 export default Page;

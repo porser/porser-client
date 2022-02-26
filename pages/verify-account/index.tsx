@@ -6,7 +6,7 @@ import feathersClient from "modules/feathers/client";
 import type { GetServerSideProps } from "next";
 import Head from "next/head";
 import * as React from "react";
-import type { Layout, NextPageWithLayout } from "types";
+import type { PageLayout, PorserNextPage } from "types";
 import { renderErrorPage, setTitleMeta } from "utils";
 import type { ErrorType } from "utils/useConfirmAuthentication";
 
@@ -47,7 +47,7 @@ interface Props {
   };
 }
 
-const Page: NextPageWithLayout<Props> = props => {
+const Page: PorserNextPage<Props> = props => {
   const { preRenderErrors } = props;
 
   const classes = useStyles();
@@ -71,7 +71,7 @@ const Page: NextPageWithLayout<Props> = props => {
   );
 };
 
-const PageLayout: Layout = page => <AuthLayout>{page}</AuthLayout>;
+const Layout: PageLayout = page => <AuthLayout>{page}</AuthLayout>;
 
 export const getServerSideProps: GetServerSideProps<Props> = async context => {
   const { query } = await Promise.resolve(context);
@@ -95,6 +95,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async context => {
   } else return { props: {} };
 };
 
-Page.getLayout = () => PageLayout;
+Page.getLayout = () => Layout;
 
 export default Page;

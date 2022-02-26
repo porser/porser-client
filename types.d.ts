@@ -10,24 +10,24 @@ import type { NextComponentType, NextPageContext } from "next";
 import type { AppProps } from "next/app";
 import * as React from "react";
 
-export type Layout = (page: React.ReactNode) => React.ReactNode;
+export type PageLayout = (page: React.ReactNode) => React.ReactNode;
 
-export type GetLayout = () => Layout;
+export type GetLayout = () => PageLayout;
 
-export type NextComponentTypeWithLayout<P = Record<string, never>> =
+export type PorserNextComponentType<P = Record<string, never>> =
   NextComponentType<NextPageContext, unknown, P> & {
     getLayout?: GetLayout;
   };
 
-export type NextPageWithLayout<
+export type PorserNextPage<
   P = Record<string, never>,
   IP = P
 > = NextComponentType<NextPageContext, IP, P> & {
   getLayout?: GetLayout;
 };
 
-export type AppPropsWithLayout<P = Record<string, never>> = AppProps<P> & {
-  Component: NextComponentTypeWithLayout<P>;
+export type PorserAppProps<P = Record<string, never>> = AppProps<P> & {
+  Component: PorserNextComponentType<P>;
 };
 
 export interface FeathersServiceOptions {

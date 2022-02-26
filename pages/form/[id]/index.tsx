@@ -4,21 +4,16 @@ import FormSerializer, { SerializedForm } from "modules/FormSerializer";
 import type { GetServerSideProps } from "next";
 import Head from "next/head";
 import * as React from "react";
-import type { Layout, NextPageWithLayout } from "types";
+import type { PageLayout, PorserNextPage } from "types";
 import { setTitleMeta } from "utils";
 
-const useStyles = makeStyles(
-  {
-    root: {}
-  },
-  { name: "Page" }
-);
+const useStyles = makeStyles({ root: {} }, { name: "Page" });
 
 interface PageProps {
   data: SerializedForm;
 }
 
-const Page: NextPageWithLayout<PageProps> = ({ data }) => {
+const Page: PorserNextPage<PageProps> = ({ data }) => {
   const classes = useStyles();
 
   const form = React.useMemo(() => FormSerializer.deserialize(data), [data]);
@@ -150,8 +145,8 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async () => {
   return { props: { data: form.serialize() } };
 };
 
-const PageLayout: Layout = page => <WithHeader>{page}</WithHeader>;
+const Layout: PageLayout = page => <WithHeader>{page}</WithHeader>;
 
-Page.getLayout = () => PageLayout;
+Page.getLayout = () => Layout;
 
 export default Page;

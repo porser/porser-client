@@ -1,7 +1,7 @@
 import { NOT_FOUND_ERROR } from "constants.app";
-import type { NextPageWithLayout } from "types";
+import type { PorserNextPage } from "types";
 
-export type Custom404Page = NextPageWithLayout<{ title: string | undefined }>;
+export type Custom404Page = PorserNextPage<{ title: string | undefined }>;
 
 const Custom404: Custom404Page = props => {
   const { title = NOT_FOUND_ERROR } = props;

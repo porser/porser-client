@@ -8,7 +8,7 @@ import * as React from "react";
 import smoothScroll from "smoothscroll-polyfill";
 import { useAuthState, usePageState } from "store";
 import theme from "theme";
-import type { AppPropsWithLayout } from "types";
+import type { PorserAppProps } from "types";
 import {
   is404Page,
   is500Page,
@@ -46,7 +46,7 @@ const constructCanonicalPath = (pathname: string, queries: ParsedUrlQuery) => {
   return pathname;
 };
 
-const App = (props: AppPropsWithLayout): React.ReactNode => {
+const App = (props: PorserAppProps): React.ReactNode => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { Component: Page, pageProps, router } = props;
 
