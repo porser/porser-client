@@ -18,7 +18,7 @@ const useStyles = makeStyles(
         paddingTop: spacer.rem,
         paddingBottom: spacer.rem
       },
-      main: {},
+      main: { height: pxToRem(24) },
       logo: { marginLeft: "auto", height: pxToRem(16) },
       logoutBtn: {},
       publicHeader: { "& $logo": { marginRight: "auto" } },
