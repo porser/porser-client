@@ -80,6 +80,9 @@ export interface View {
   isFinalView?: boolean;
   isInitialView?: boolean;
   fields: Field[];
+  singly?: boolean;
+  showTitle?: boolean;
+  showDescription?: boolean;
 }
 
 type ReadonlyField = Readonly<Field> & {
@@ -105,11 +108,11 @@ export default class FormSerializer {
 
   private views: View[] = [];
 
-  constructor(params: { title: string; description?: string }) {
+  constructor(params?: { title?: string; description?: string }) {
     this.id = nanoid();
 
-    this.title = params.title;
-    this.description = params.description || "";
+    this.title = params?.title || "";
+    this.description = params?.description || "";
   }
 
   public getId() {
@@ -120,31 +123,43 @@ export default class FormSerializer {
     return this.title;
   }
 
+  public setTitle(title: string) {
+    this.title = title;
+  }
+
   public getDescription() {
     return this.description;
+  }
+
+  public setDescription(description: string) {
+    this.description = description;
   }
 
   public getViews() {
     return this.views;
   }
 
-  public createView(params: {
-    title?: string;
-    description?: string;
-    isFinalView?: boolean;
-    isInitialView?: boolean;
-  }) {
+  public createView(params?: Partial<Omit<View, "id" | "index">>) {
     const newView: View = {
       id: nanoid(),
-      title: params.title || "",
-      description: params.description || "",
-      isFinalView: params.isFinalView || false,
-      isInitialView: params.isInitialView || false,
+      title: params?.title || "",
+      description: params?.description || "",
+      isFinalView: params?.isFinalView || false,
+      isInitialView: params?.isInitialView || false,
+      singly: params?.singly || false,
+      showTitle:
+        typeof params?.showTitle === "undefined" ? true : params.showTitle,
+      showDescription:
+        typeof params?.showDescription === "undefined"
+          ? true
+          : params.showDescription,
       fields: [],
       index: this.views.length
     };
 
     this.views.push(newView);
+
+    return newView;
   }
 
   public getView(viewId: View["id"]) {
@@ -152,18 +167,33 @@ export default class FormSerializer {
   }
 
   public deleteView(viewId: View["id"]) {
-    this.views = this.views.filter(view => view.id !== viewId);
+    const view = this.getView(viewId);
+
+    if (!view) return false;
+
+    this.views = this.views
+      .filter(view => view.id !== viewId)
+      .map((view, idx) => {
+        view.index = idx;
+        return view;
+      });
+
+    return true;
   }
 
   public updateView(
     viewId: View["id"],
-    props: Partial<Omit<View, "id" | "index" | "isFinalView" | "isInitialView">>
+    props: Partial<
+      Omit<View, "id" | "index" | "isFinalView" | "isInitialView" | "permanent">
+    >
   ) {
     const view = this.getView(viewId);
 
     if (!view) return;
 
     this.views[view.index] = { ...view, ...props };
+
+    return this.views[view.index];
   }
 
   public updateViewIndex(viewId: View["id"], newIndex: number) {
@@ -171,31 +201,36 @@ export default class FormSerializer {
 
     if (!view) return;
 
+    const target = this.views[view.index];
+
     const moveItem = (from: number, to: number) => {
-      const views = this.views;
+      if (from === to) return;
 
       if (from > to) {
         this.views = [
-          ...views.slice(0, to),
-          views[from],
-          ...views.slice(to + 1, from),
-          views[to],
-          ...views.slice(from + 1)
-        ];
+          ...this.views.slice(0, to),
+          this.views[from],
+          ...this.views.slice(to, from),
+          ...this.views.slice(from + 1)
+        ].map((view, idx) => {
+          view.index = idx;
+          return view;
+        });
       } else moveItem(to, from);
     };
 
-    this.views[view.index].index = newIndex;
     moveItem(view.index, newIndex);
+
+    return target;
   }
 
-  public createField<T extends keyof Fields>(params: {
-    title: string;
-    description?: string;
-    type: T;
-    props: Fields[T];
-    viewId: View["id"];
-  }) {
+  public createField<T extends keyof Fields>(
+    params: Omit<Field, "id" | "index" | "description" | "type" | "props"> & {
+      description?: string;
+      type: T;
+      props: Fields[T];
+    }
+  ) {
     const view = this.getView(params.viewId);
 
     if (!view) return;
@@ -211,6 +246,8 @@ export default class FormSerializer {
     };
 
     view.fields.push(newField);
+
+    return newField;
   }
 
   public getField(fieldId: Field["id"]) {
@@ -226,17 +263,25 @@ export default class FormSerializer {
   public deleteField(fieldId: Field["id"]) {
     const { viewIndex, field } = this.getField(fieldId);
 
-    if (!field) return;
+    if (!field) return false;
 
     const view = this.views[viewIndex];
 
-    view.fields = view.fields.filter(field => field.id !== fieldId);
+    view.fields = view.fields
+      .filter(field => field.id !== fieldId)
+      .map((field, idx) => {
+        field.index = idx;
+        return field;
+      });
+
+    if (view.fields.length === 0) return this.deleteView(view.id);
+    return true;
   }
 
   public updateField<T extends keyof Fields>(
     fieldId: Field["id"],
     props: Partial<
-      Omit<Field, "id" | "index"> & {
+      Omit<Field, "id" | "index" | "type" | "props"> & {
         type: T;
         props: Partial<Fields[T]>;
       }
@@ -247,6 +292,8 @@ export default class FormSerializer {
     if (!field) return;
 
     this.views[viewIndex].fields[field.index] = { ...field, ...props };
+
+    return this.views[viewIndex].fields[field.index];
   }
 
   public updateFieldIndex(fieldId: Field["id"], newIndex: number) {
@@ -254,22 +301,28 @@ export default class FormSerializer {
 
     if (!field) return;
 
+    const view = this.views[viewIndex];
+    const target = view.fields[field.index];
+
     const moveItem = (from: number, to: number) => {
-      const fields = this.views[viewIndex].fields;
+      if (from === to) return;
 
       if (from > to) {
-        this.views[viewIndex].fields = [
-          ...fields.slice(0, to),
-          fields[from],
-          ...fields.slice(to + 1, from),
-          fields[to],
-          ...fields.slice(from + 1)
-        ];
+        view.fields = [
+          ...view.fields.slice(0, to),
+          view.fields[from],
+          ...view.fields.slice(to, from),
+          ...view.fields.slice(from + 1)
+        ].map((field, idx) => {
+          field.index = idx;
+          return field;
+        });
       } else moveItem(to, from);
     };
 
-    this.views[viewIndex].fields[field.index].index = newIndex;
     moveItem(field.index, newIndex);
+
+    return target;
   }
 
   public serialize(): SerializedForm {
