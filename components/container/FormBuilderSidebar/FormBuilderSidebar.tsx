@@ -2,11 +2,20 @@ import { FormatListGroup } from "@sonnat/icons";
 import { Button, Flex, FlexItem, Text } from "@sonnat/ui";
 import c from "classnames";
 import FormBuilderContext, {
+  deleteField,
+  deleteGroup,
+  duplicateField,
+  duplicateGroup,
+  editGroup,
+  group,
+  ungroup,
   type Field,
+  type IContext,
   type View
 } from "context/FormBuilderContext";
 import * as React from "react";
-import { PageRow, FieldGroupRow, FieldRow } from "./partials";
+import { createSlotId } from "utils";
+import { FieldGroupRow, FieldRow, PageRow } from "./partials";
 import useStyles from "./styles";
 
 interface FormBuilderSidebarBaseProps {
@@ -19,6 +28,40 @@ type FormBuilderSidebarProps = Omit<
 > &
   FormBuilderSidebarBaseProps;
 
+const createFieldActions =
+  (dispatch?: IContext["dispatch"]) => (field: Field) => {
+    const actions = {
+      duplicate: () => void 0 as void,
+      delete: () => void 0 as void
+    };
+
+    if (!dispatch) return actions;
+
+    actions.duplicate = () => void duplicateField(dispatch)(field);
+    actions.delete = () => void deleteField(dispatch)(field);
+
+    return actions;
+  };
+
+const createGroupActions =
+  (dispatch?: IContext["dispatch"]) => (view: View) => {
+    const actions = {
+      duplicate: () => void 0 as void,
+      delete: () => void 0 as void,
+      edit: () => void 0 as void,
+      ungroup: () => void 0 as void
+    };
+
+    if (!dispatch) return actions;
+
+    actions.duplicate = () => void duplicateGroup(dispatch)(view);
+    actions.delete = () => void deleteGroup(dispatch)(view);
+    actions.edit = () => void editGroup(dispatch)(view);
+    actions.ungroup = () => void ungroup(dispatch)(view);
+
+    return actions;
+  };
+
 const FormBuilderSidebarBase = (
   props: FormBuilderSidebarProps,
   ref: React.Ref<HTMLDivElement>
@@ -30,135 +73,17 @@ const FormBuilderSidebarBase = (
   const formBuilderContext = React.useContext(FormBuilderContext);
   const [selected, setSelected] = React.useState<Field[]>([]);
 
+  const dispatch = formBuilderContext?.dispatch;
+
   const toggleSelectField = (checkedState: boolean, field: Field) => {
     if (checkedState) setSelected(s => [...s, field]);
     else setSelected(s => s.filter(i => i.id !== field.id));
   };
 
-  const createFieldActions = React.useCallback((field: Field) => {
-    const createConfirmationModal = (field: Field) => ({
-      open: true,
-      title: ["حذف سؤال", `"${field.title}"`].join(" "),
-      content: (
-        <Text variant="body" color="textSecondary" as="p">
-          {[
-            "شما در حال حذف کردن سؤال هستید.",
-            "این عملیات بازگشت‌پذیر نیست، آیا از انجام این عملیات مطمئن هستید؟"
-          ].join("\n")}
-        </Text>
-      ),
-      primaryAction: {
-        label: "بله، حذف شود",
-        callback: () =>
-          void formBuilderContext?.dispatch({
-            type: "REMOVE_FIELD",
-            fieldId: field.id
-          })
-      }
-    });
-
-    return {
-      duplicate: () =>
-        void formBuilderContext?.dispatch({
-          type: "DUPLICATE_FIELD",
-          fieldId: field.id
-        }),
-      delete: () =>
-        void formBuilderContext?.dispatch({
-          type: "SET_CONFIRMATION_MODAL",
-          modal: createConfirmationModal(field)
-        })
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const groupFields = () => {
-    formBuilderContext?.dispatch({
-      type: "SET_GROUP_SETTINGS_MODAL",
-      modal: {
-        open: true,
-        type: "create",
-        initialState: undefined,
-        primaryCallback: state => {
-          formBuilderContext?.dispatch({
-            type: "ADD_VIEW",
-            view: { ...state, fields: selected }
-          });
-          formBuilderContext?.dispatch({
-            type: "REMOVE_FIELDS",
-            fields: selected
-          });
-
-          setSelected([]);
-        }
-      }
-    });
+    if (!dispatch) return;
+    group(dispatch)(selected, () => void setSelected([]));
   };
-
-  const createGroupActions = React.useCallback(
-    (view: View) => {
-      const createConfirmationModal = (view: View) => ({
-        open: true,
-        title: ["حذف گروه", `"${view.title}"`].join(" "),
-        content: (
-          <Text variant="body" color="textSecondary" as="p">
-            {[
-              "شما در حال حذف کردن گروه و سؤالاتش هستید.",
-              "این عملیات بازگشت‌پذیر نیست، آیا از انجام این عملیات مطمئن هستید؟"
-            ].join("\n")}
-          </Text>
-        ),
-        primaryAction: {
-          label: "بله، حذف شود",
-          callback: () =>
-            void formBuilderContext?.dispatch({
-              type: "REMOVE_VIEW",
-              viewId: view.id
-            })
-        }
-      });
-
-      return {
-        duplicate: () =>
-          void formBuilderContext?.dispatch({
-            type: "DUPLICATE_VIEW",
-            viewId: view.id
-          }),
-        delete: () =>
-          void formBuilderContext?.dispatch({
-            type: "SET_CONFIRMATION_MODAL",
-            modal: createConfirmationModal(view)
-          }),
-        edit: () =>
-          void formBuilderContext?.dispatch({
-            type: "SET_GROUP_SETTINGS_MODAL",
-            modal: {
-              open: true,
-              type: "edit",
-              initialState: {
-                title: view.title,
-                description: view.description,
-                showTitle: view.showTitle,
-                showDescription: view.showDescription
-              },
-              primaryCallback: state => {
-                formBuilderContext?.dispatch({
-                  type: "PATCH_VIEW",
-                  view: { ...state, id: view.id }
-                });
-              }
-            }
-          }),
-        ungroup: () =>
-          void formBuilderContext?.dispatch({
-            type: "UNGROUP",
-            viewId: view.id
-          })
-      };
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
 
   const isFieldSelected = (field: Field) =>
     !!selected.find(f => f.id === field.id);
@@ -171,7 +96,7 @@ const FormBuilderSidebarBase = (
         id={view.id}
         title={view.title}
         empty={view.fields.length === 0}
-        actions={createGroupActions(view)}
+        actions={createGroupActions(dispatch)(view)}
       >
         {view.fields.map(field => (
           <FieldRow
@@ -179,7 +104,7 @@ const FormBuilderSidebarBase = (
             selectable={view.singly}
             selected={isFieldSelected(field)}
             onSelect={isSelected => void toggleSelectField(isSelected, field)}
-            actions={createFieldActions(field)}
+            actions={createFieldActions(dispatch)(field)}
             data={field}
           />
         ))}
@@ -209,8 +134,16 @@ const FormBuilderSidebarBase = (
       <Flex direction="column" className={classes.body}>
         {formBuilderContext?.state.form?.views.map(view => renderView(view))}
       </Flex>
-      <PageRow title="صفحه خوشامدگویی" className={classes.staticRow} />
-      <PageRow title="صفحه پایانی" className={classes.staticRow} />
+      <PageRow
+        id={createSlotId("start")}
+        title="صفحه خوشامدگویی"
+        className={classes.staticRow}
+      />
+      <PageRow
+        id={createSlotId("end")}
+        title="صفحه پایانی"
+        className={classes.staticRow}
+      />
     </aside>
   );
 };

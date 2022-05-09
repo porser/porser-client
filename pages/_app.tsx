@@ -1,6 +1,6 @@
-import { CssBaseline, PageLoader } from "@sonnat/ui";
+import { CssBaseline, PageLoader, NoSsr } from "@sonnat/ui";
 import { makeStyles, SonnatInitializer } from "@sonnat/ui/styles";
-import { PageSuspension } from "components/partial";
+import { PageSuspension } from "components";
 import { BYPASS_ROUTES, PUBLIC_ROUTES } from "constants.app";
 import Head from "next/head";
 import type { ParsedUrlQuery } from "querystring";
@@ -51,6 +51,8 @@ const App = (props: PorserAppProps): React.ReactNode => {
   const { Component: Page, pageProps, router } = props;
 
   useGlobalStyles();
+
+  const PageWrapper = Page.csrOnly ?? false ? NoSsr : React.Fragment;
 
   const getPageLayout =
     Page.getLayout || (() => (page: React.ReactNode) => page);
@@ -147,18 +149,20 @@ const App = (props: PorserAppProps): React.ReactNode => {
       </Head>
       <div id="main-wrapper">
         <CssBaseline />
-        {withPageLayout(
-          <React.Fragment>
-            <PageLoader loading={isPageLoading} />
-            <PageSuspension suspend={isPageSuspended}>
-              {hasServerErrors ? (
-                renderErrorPage(otherErrors)
-              ) : (
-                <Page {...pageProps} />
-              )}
-            </PageSuspension>
-          </React.Fragment>
-        )}
+        <PageWrapper>
+          {withPageLayout(
+            <>
+              <PageLoader loading={isPageLoading} />
+              <PageSuspension suspend={isPageSuspended}>
+                {hasServerErrors ? (
+                  renderErrorPage(otherErrors)
+                ) : (
+                  <Page {...pageProps} />
+                )}
+              </PageSuspension>
+            </>
+          )}
+        </PageWrapper>
       </div>
     </SonnatInitializer>
   );

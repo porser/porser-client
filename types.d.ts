@@ -17,6 +17,7 @@ export type GetLayout = () => PageLayout;
 export type PorserNextComponentType<P = Record<string, never>> =
   NextComponentType<NextPageContext, unknown, P> & {
     getLayout?: GetLayout;
+    csrOnly?: boolean;
   };
 
 export type PorserNextPage<
@@ -24,6 +25,7 @@ export type PorserNextPage<
   IP = P
 > = NextComponentType<NextPageContext, IP, P> & {
   getLayout?: GetLayout;
+  csrOnly?: boolean;
 };
 
 export type PorserAppProps<P = Record<string, never>> = AppProps<P> & {

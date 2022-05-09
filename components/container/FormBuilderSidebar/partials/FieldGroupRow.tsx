@@ -10,6 +10,7 @@ import { Flex, Text, IconButton, Menu, MenuItem } from "@sonnat/ui";
 import makeStyles from "@sonnat/ui/styles/makeStyles";
 import c from "classnames";
 import * as React from "react";
+import { createSlotId } from "utils";
 
 const useStyles = makeStyles(
   ({ colors: { divider }, spacings: { spacer }, typography: { pxToRem } }) => ({
@@ -79,6 +80,7 @@ const FieldGroupRowBase = (
     children,
     actions,
     title,
+    id,
     singly = false,
     empty = false,
     ...otherProps
@@ -91,6 +93,7 @@ const FieldGroupRowBase = (
 
   return (
     <div
+      id={createSlotId(singly ? "singly" : "group", id)}
       ref={ref}
       className={c(className, classes.root, {
         [classes.singly]: singly,
@@ -123,8 +126,7 @@ const FieldGroupRowBase = (
         />
         <Menu
           open={isMenuOpen}
-          minWidth={128}
-          anchorNode={menuAnchorRef.current}
+          anchorNodeReference={menuAnchorRef}
           onOutsideClick={() => void setIsMenuOpen(false)}
         >
           <MenuItem

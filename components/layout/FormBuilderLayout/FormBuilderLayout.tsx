@@ -1,10 +1,10 @@
 import { Button } from "@sonnat/ui";
 import c from "classnames";
 import FormBuilderSidebar from "components/container/FormBuilderSidebar";
-import GroupSettingsModal from "components/container/FormBuilderSidebar/partials/GroupSettingsModal";
-import { ConfirmationModal } from "components/modals";
+import { ConfirmationModal } from "components/modal";
 import FormBuilderContext from "context/FormBuilderContext";
 import * as React from "react";
+import { FieldSettingsModal, GroupSettingsModal } from "./partials";
 import useStyles from "./styles";
 
 interface FormBuilderLayoutBaseProps {
@@ -27,6 +27,7 @@ const FormBuilderLayout = (props: FormBuilderLayoutProps) => {
 
   const confirmationModal = formBuilderContext?.state.confirmationModal;
   const groupSettingsModal = formBuilderContext?.state.groupSettingsModal;
+  const fieldSettingsModal = formBuilderContext?.state.fieldSettingsModal;
 
   const dispatchAction = formBuilderContext?.dispatch;
 
@@ -36,9 +37,15 @@ const FormBuilderLayout = (props: FormBuilderLayoutProps) => {
       modal: { open: false }
     });
 
-  const closeGroupsSettingsModal = () =>
+  const closeGroupSettingsModal = () =>
     void dispatchAction?.({
       type: "SET_GROUP_SETTINGS_MODAL",
+      modal: { open: false }
+    });
+
+  const closeFieldSettingsModal = () =>
+    void dispatchAction?.({
+      type: "SET_FIELD_SETTINGS_MODAL",
       modal: { open: false }
     });
 
@@ -48,21 +55,35 @@ const FormBuilderLayout = (props: FormBuilderLayoutProps) => {
       <main id="main" className={classes.main}>
         {children}
       </main>
-      {groupSettingsModal && groupSettingsModal.open && (
-        <GroupSettingsModal
-          open
-          type={groupSettingsModal.type}
-          initialState={groupSettingsModal.initialState}
-          onClose={closeGroupsSettingsModal}
+      {fieldSettingsModal && (
+        <FieldSettingsModal
+          key={String(fieldSettingsModal.open)}
+          open={fieldSettingsModal.open}
+          type={fieldSettingsModal.type}
+          fieldType={fieldSettingsModal.fieldType}
+          fieldProps={fieldSettingsModal.fieldProps}
+          onClose={closeFieldSettingsModal}
           primaryCallback={state =>
-            void (groupSettingsModal.primaryCallback(state),
-            closeGroupsSettingsModal())
+            void (fieldSettingsModal.primaryCallback(state),
+            closeFieldSettingsModal())
           }
         />
       )}
-      {confirmationModal && confirmationModal.open && (
+      {groupSettingsModal && (
+        <GroupSettingsModal
+          open={groupSettingsModal.open}
+          type={groupSettingsModal.type}
+          initialState={groupSettingsModal.initialState}
+          onClose={closeGroupSettingsModal}
+          primaryCallback={state =>
+            void (groupSettingsModal.primaryCallback(state),
+            closeGroupSettingsModal())
+          }
+        />
+      )}
+      {confirmationModal && (
         <ConfirmationModal
-          open
+          open={confirmationModal.open}
           title={confirmationModal.title}
           onBackdropClick={() => void closeConfirmationModal()}
           onEscapeKeyUp={() => void closeConfirmationModal()}
@@ -85,7 +106,7 @@ const FormBuilderLayout = (props: FormBuilderLayoutProps) => {
             </>
           }
         >
-          {confirmationModal?.content}
+          {confirmationModal.content}
         </ConfirmationModal>
       )}
     </div>

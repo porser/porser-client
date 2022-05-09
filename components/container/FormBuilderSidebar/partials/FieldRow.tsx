@@ -148,8 +148,7 @@ const FieldRowBase = (props: FieldRowProps, ref: React.Ref<HTMLDivElement>) => {
       />
       <Menu
         open={isMenuOpen}
-        minWidth={120}
-        anchorNode={menuAnchorRef.current}
+        anchorNodeReference={menuAnchorRef}
         onOutsideClick={() => void setIsMenuOpen(false)}
       >
         <MenuItem

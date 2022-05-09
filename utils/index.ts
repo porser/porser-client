@@ -6,6 +6,7 @@ export {
   retrieve as retrieveCookie,
   store as storeCookie
 } from "./cookies";
+export { default as createSlotId } from "./createSlotId";
 export { default as env } from "./env";
 export { default as is404Page } from "./is404Page";
 export { default as is500Page } from "./is500Page";
