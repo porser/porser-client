@@ -256,10 +256,10 @@
   resolved "https://registry.yarnpkg.com/@sonnat/icons/-/icons-2.1.0.tgz#243563507c540369121152ce4112a3f9bd48fcfd"
   integrity sha512-yJ7v9Gv40XUZMpLahnFmtgNDpfSSAIJirYWOjV1YQum8Fe++3CpdXJRbz1tZ7EYu41/eNMJA2Mytl5wL+gJb9A==
 
-"@sonnat/ui@^2.0.3":
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/@sonnat/ui/-/ui-2.0.3.tgz#33c2657cb873c653498a1d469d7532000bd0316b"
-  integrity sha512-P0veZr5oRAoYL6S1yEYFNOTs+D2Kn0yT55H4Hmy3KDjPSp7w5IYENfpzoJWmi5ur5E1mfbc9ATZ/i8n9JIMLlA==
+"@sonnat/ui@^2.0.7":
+  version "2.0.7"
+  resolved "https://registry.yarnpkg.com/@sonnat/ui/-/ui-2.0.7.tgz#a65a9fb93fdc1ebcffa5bf3004e9036ad96a3225"
+  integrity sha512-GWJs7Y8EuNItsKc+c2a92AFl2JYetgrOox1QbPmoBH4fdlxuzOnkJDPp3ur1JCW+5fNxOi9/d+EyQ+rZxLykIg==
   dependencies:
     classnames "^2.3.1"
     color "^3.2.1"
@@ -442,6 +442,23 @@
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@utilityjs/use-controlled-prop/-/use-controlled-prop-1.1.1.tgz#b8b2deba372be1810212483fe132a1498bd53ab4"
   integrity sha512-3qCjQgSd2JgmHdnYxKezh0V/XTUqXpDdV3RmbsQCZnmYpxNII3jWHob5+AjR+UPq0DROZ6D2QVGDPon8hrpDrQ==
+
+"@utilityjs/use-hover@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@utilityjs/use-hover/-/use-hover-1.0.2.tgz#da897122db7772f5f82ab162119cf3f78b5ee171"
+  integrity sha512-FnqpSLoOTlTWnXjPgIpyXx92DBOMX24XAwKBsIMZ8EGYJmDDFiU2zrAYVoIQ9PfWL2vDG7wkJ2qdmFa40N8ByQ==
+  dependencies:
+    "@utilityjs/use-register-node-ref" latest
+
+"@utilityjs/use-lazy-initialized-value@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@utilityjs/use-lazy-initialized-value/-/use-lazy-initialized-value-1.0.0.tgz#0115d057e86a28d193f3a83b9f89c7a82cec03cf"
+  integrity sha512-C96tFBAG3CfvVKcBmPJgcsADhn+WQrmxG3k6olm3fuUKcbAvRfjY5hHtDT/1Xvn3IV3wo6Hq/pyxAFq8A0xJzg==
+
+"@utilityjs/use-register-node-ref@latest":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@utilityjs/use-register-node-ref/-/use-register-node-ref-1.1.0.tgz#e5ad2bf43d61261737f37183561d484ff549d34b"
+  integrity sha512-Zn6Aoxqm96bP3Kf8lErKiUbdZkg3nmnbC8GcdXnqESDOGRbwZ7gIMD7WR7DLjSfx5ZV8TZQpS8lh5MQgdpAbuw==
 
 acorn-jsx@^5.3.1:
   version "5.3.2"
